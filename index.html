@@ -1,171 +1,115 @@
 <!doctype html>
 <html lang="it">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rituali Benessere | VTV</title>
 <style>
 @font-face{font-family:Gotham;src:url('./Gotham-Bold.otf') format('opentype');font-style:normal;font-weight:700;font-display:swap}
-:root{--wine:#ae001d;--cream:#ffefe0;--white:#fff;--dark:#40200e}
-*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#201006;font-family:Arial,Helvetica,sans-serif}
-#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;overflow:hidden;transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center center;background:#481f0a}
-.slide{position:absolute;inset:0;visibility:hidden;opacity:0;transition:opacity .45s ease,visibility 0s .45s;overflow:hidden}.slide.active{visibility:visible;opacity:1;transition:opacity .45s ease,visibility 0s}
-#poster{display:block;width:100%;height:100%;object-fit:contain;background:#1e0b04}
-.wood{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(90deg,transparent 0,rgba(60,18,0,.12) 43%,rgba(32,10,0,.15) 100%),repeating-linear-gradient(0deg,transparent 0,transparent 87px,rgba(30,10,0,.24) 89px,rgba(246,182,112,.17) 92px,transparent 95px),linear-gradient(105deg,#c96921 0%,#a54e16 49%,#b75b19 100%);}
-.wood:before{content:'';position:absolute;inset:0;background:url('assets/legno-chiaro.jpg') repeat-y center top / 100% 220px;mix-blend-mode:soft-light;opacity:.4}
-.wood:after{content:'';position:absolute;right:-4%;bottom:-8%;width:50%;height:22%;transform:skewY(-9deg);background:repeating-linear-gradient(90deg,#8b370d 0 18px,#df8a3a 22px 110px,#4f1a00 115px 121px);opacity:.48;box-shadow:0 -15px 45px #5b290955}
-.wood.dark{background-image:radial-gradient(ellipse at 25% 30%,#854419aa,transparent 65%),linear-gradient(90deg,rgba(24,9,0,.45),rgba(39,12,0,.2)),repeating-linear-gradient(0deg,transparent 0,transparent 145px,#30120470 147px,#ac5a2866 150px,transparent 155px),linear-gradient(105deg,#7c350e,#45200e 73%,#623012)}
-.wood.dark:before{background-image:url('assets/legno-scuro.jpg');opacity:.26}
-.wood.dark:after{opacity:.26}
-.left{position:absolute;left:69px;top:107px;width:590px;color:white;z-index:2}.head{font:700 80px/0.98 Gotham,Arial,sans-serif;letter-spacing:-1.5px;margin:0;text-transform:uppercase}.subtitle{font:400 39px/1.13 Arial,sans-serif;margin-top:37px;letter-spacing:.2px}.shortline{width:148px;height:4px;background:#fff;margin-top:37px}.vert{position:absolute;z-index:2;left:698px;top:99px;height:740px;width:3px;background:#fff9}
-.eventdate{position:absolute;left:0;top:422px;width:593px;height:153px;border-radius:21px;background:linear-gradient(105deg,#ab0020,#c80021);display:flex;align-items:center;gap:30px;padding:20px 34px;box-shadow:0 5px 12px #4b14051c}.eventdate svg{width:77px;height:77px;flex-shrink:0}.eventdate strong{font:700 49px/1.04 Gotham,Arial;white-space:pre-line;text-transform:uppercase}
-.book{position:absolute;left:0;top:619px;width:594px;height:129px;border:3px solid white;border-radius:23px;display:flex;gap:25px;align-items:center;padding:15px 28px}.book svg{width:79px;height:79px;flex-shrink:0}.book span{font:700 34px/1.15 Gotham,Arial;white-space:pre-line}
-.tablearea{position:absolute;left:730px;top:101px;width:1130px;height:742px;z-index:2;background:#fff1e7;border:2px solid #fef1e6;border-radius:25px;overflow:hidden;box-shadow:0 14px 30px #34140938;display:flex;flex-direction:column}
-.tableheading{height:67px;flex:none;background:linear-gradient(90deg,#a6001d,#bb001b);color:white;display:grid;grid-template-columns:187px 1fr 310px;align-items:center;padding:0 25px;font:700 34px Gotham,Arial}
-.tableheading span:nth-child(2){padding-left:54px}.tableheading span:nth-child(3){text-align:center}
-.rows{height:675px;display:flex;flex-direction:column}.ritual-row{display:grid;grid-template-columns:187px 1fr 310px;align-items:center;min-height:0;flex:1;border-bottom:2px solid #fff;background:#faefe6;color:#101010;padding:0 23px}.ritual-row:nth-child(even){background:#f9ebdf}.ritual-row:last-child{border-bottom:0}
-.time{font:700 35px Gotham,Arial}.ritual-main{display:flex;gap:28px;align-items:center;min-width:0}.icon-rit{font:700 43px Arial;width:65px;color:#b70022;text-align:center;flex-shrink:0}.name{font:700 29px/1.07 Gotham,Arial;letter-spacing:-.7px;overflow-wrap:anywhere}.loctag{border-radius:35px;border:2px solid #a66c32;color:#22150a;background:#f9e3cb;font:700 26px Gotham,Arial;text-align:center;padding:12px 4px;max-width:305px}.statetag{color:#fff;font:700 22px Gotham,Arial;display:block;text-align:center;border-radius:31px;padding:14px 5px;background:#258635}.statetag.current{background:#af0622}.statetag.ended{background:#6b6a69}
-.calleft{position:absolute;left:145px;top:174px;width:540px;color:#fff;z-index:2}.calleft .head{font-size:77px;line-height:.96}.calleft .shortline{height:2px;width:510px;margin-top:39px;opacity:.85}.calleft .cal-sub{font:700 54px/1.13 Gotham,Arial;margin:58px 0 0;text-align:center}.calendar-wrap{position:absolute;z-index:2;right:58px;top:100px;width:1111px;height:828px;border:3px solid #f1d2a8;border-radius:47px;background:linear-gradient(120deg,#613014e8,#8b431ee6);padding:20px 31px;box-shadow:0 10px 50px #12070033}
-.calendar-row{position:relative;display:grid;grid-template-columns:208px 1fr;gap:42px;align-items:center;height:20%;padding:0 17px;border-bottom:1px solid #dfb38699;opacity:0;transform:translateY(-14px)}.calendar-row:last-child{border-bottom:0}.calendar-row.play{animation:reveal .35s ease both}.calendar-row .tile{width:207px;height:134px;background:#f8d9ad;color:#24130b;border-radius:30px;display:grid;align-content:center;justify-items:center;line-height:1}.calendar-row:first-child .tile{background:#b50025;color:#fff;border:3px solid #ffe9d3}.tile .num{font:700 74px Gotham,Arial}.tile .month{font:700 38px Gotham,Arial}.calendar-row .weekday{font:700 60px Gotham,Arial;color:#fff;line-height:1.03}.calendar-row .datefull{font:400 39px Arial,sans-serif;color:#fff;line-height:1.16;margin-top:2px}
-/* Calendario: grafica approvata, come sfondo pieno. La sola colonna delle date e dinamica. */
-#s-calendario{background:#44200d url('assets/riferimento-calendario.png') center center / 100% 100% no-repeat}
-#s-calendario .wood.dark,#s-calendario>.vert,#s-calendario .calleft{display:none}
-/* Ricostruzione opaca dell'interno del pannello, sulle stesse coordinate dell'originale:
-   impedisce che le date dell'immagine sottostante restino visibili. */
-#s-calendario .calendar-wrap{
-  left:742px;right:auto;top:99px;width:1100px;height:835px;
-  border:3px solid #f3d0a8;border-radius:52px;
-  background:linear-gradient(115deg,#673014 0%,#81401c 55%,#82401b 100%);
-  box-shadow:none;padding:20px 31px;overflow:hidden;
-}
-#s-calendario .calendar-row{grid-template-columns:211px minmax(0,1fr);gap:40px;padding:0 18px;border-bottom:1px solid #d4a779a0}
-#s-calendario .calendar-row .tile{width:211px;height:135px;border-radius:27px}
-#s-calendario .calendar-row .weekday{font-size:59px}
-#s-calendario .calendar-row .datefull{font-size:39px}
-@keyframes reveal{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
-.notice{position:absolute;right:45px;top:34px;color:#fff9;font:700 28px Gotham,Arial}
-.empty{display:flex;align-items:center;justify-content:center;color:#5c3520;height:100%;font:700 32px Gotham,Arial;text-align:center;padding:40px}
-#debug{position:absolute;z-index:12;bottom:6px;right:8px;opacity:0;font-size:12px;color:white}
-@media(prefers-reduced-motion:reduce){.slide,.slide.active{transition:none}.calendar-row.play{animation:none;opacity:1;transform:none}}
-
-/* SLIDE 2: ricostruita sull'immagine di riferimento approvata.
-   Le altre due schermate non vengono modificate. */
-#s-rituali{background:#a34c18 url('assets/rituali-layout.png') center center/100% 100% no-repeat}
-#s-rituali>.wood,#s-rituali>.vert,#s-rituali>.left,#s-rituali>.tablearea{display:none}
-#s-rituali .dynamic-date{position:absolute;left:211px;top:506px;width:433px;height:124px;z-index:4;
- background:linear-gradient(100deg,#b50121,#c50020);display:flex;align-items:center;
- color:#fff;font:700 49px/1.02 Gotham,Arial,sans-serif;white-space:pre-line;letter-spacing:-1px}
-#s-rituali .dynamic-book{position:absolute;left:185px;top:684px;width:455px;height:106px;z-index:4;
- background:linear-gradient(90deg,#b84d12,#aa4611);display:flex;align-items:center;
- color:#fff;font:700 32px/1.09 Gotham,Arial,sans-serif;white-space:pre-line;letter-spacing:-.5px}
-#s-rituali .dynamic-col-title{position:absolute;left:1524px;top:89px;width:300px;height:65px;z-index:4;
- display:flex;align-items:center;justify-content:center;background:#b20019;
- color:#fff;font:700 34px Gotham,Arial,sans-serif}
-#s-rituali .dynamic-rows{position:absolute;left:708px;top:153px;width:1140px;height:651px;
- display:flex;flex-direction:column;z-index:3;overflow:hidden;border-radius:0 0 25px 0}
-#s-rituali .dynamic-row{flex:1;min-height:0;display:grid;grid-template-columns:172px 95px minmax(0,1fr) 325px;
- align-items:center;padding:0 18px 0 27px;border-bottom:2px solid #fff;
- background:#fff0e6;color:#111}
-#s-rituali .dynamic-row:nth-child(even){background:#fcebe0}
-#s-rituali .dynamic-row:last-child{border-bottom:0}
-#s-rituali .dynamic-time{font:700 36px Gotham,Arial,sans-serif}
-#s-rituali .dynamic-icon{display:flex;align-items:center;justify-content:center;width:64px;height:54px}
-#s-rituali .dynamic-icon svg{width:53px;height:53px;fill:none;stroke:#0a0a0a;stroke-width:3.6;stroke-linecap:round;stroke-linejoin:round}
-#s-rituali .dynamic-icon.steam svg{stroke:#c00023}
-#s-rituali .dynamic-name{font:700 28px/1.06 Gotham,Arial,sans-serif;letter-spacing:-.8px;overflow-wrap:anywhere}
-#s-rituali .dynamic-place{justify-self:center;width:295px;min-height:49px;border-radius:34px;
- border:2px solid #a46c38;background:#fae3cc;color:#1f1612;
- display:flex;justify-content:center;align-items:center;text-align:center;
- font:700 27px/1.08 Gotham,Arial,sans-serif;padding:3px 7px}
-#s-rituali .dynamic-place.status{border-color:transparent;background:#28904c;color:white;font-size:23px}
-#s-rituali .dynamic-place.status.current{background:#b20024}
-#s-rituali .dynamic-place.status.ended{background:#777}
+:root{--red:#b00021;--ivory:#fff0e5;--cocoa:#54240f}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;background:#2a1005;overflow:hidden;font-family:Arial,Helvetica,sans-serif}
+#stage{position:absolute;top:50%;left:50%;height:1080px;width:1920px;transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;overflow:hidden;background:#a94e18}
+.slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .4s,visibility 0s .4s;overflow:hidden}
+.slide.active{opacity:1;visibility:visible;transition:opacity .4s,visibility 0s}
+#marketing{width:100%;height:100%;object-fit:cover;display:block}
+/* Fondali senza testi incorporati, separati dagli elementi dinamici. */
+.wood-light,.wood-dark{position:absolute;inset:0;pointer-events:none}
+.wood-light{background:linear-gradient(90deg,#d46b24dd,#b65619aa 75%),url('assets/legno-chiaro.jpg') center top / 1920px 220px repeat-y}
+.wood-dark{background:radial-gradient(ellipse at 90% 50%,#a34e1c66,transparent 70%),linear-gradient(90deg,#47200bcf,#633012cc),url('assets/legno-scuro.jpg') center top / 1920px 220px repeat-y}
+.wood-light:after,.wood-dark:after{content:'';position:absolute;right:0;bottom:0;width:47%;height:180px;background:repeating-linear-gradient(96deg,#9c4217 0 12px,#d47b33 13px 108px,#64270b 109px 118px);border-top:7px solid #7f310e;clip-path:polygon(8% 6%,100% 0%,100% 100%,0% 100%);opacity:.64}
+.wood-dark:after{opacity:.35}
+/* Comune */
+.gotham{font-family:Gotham,Arial,sans-serif;font-weight:700}
+.vline{position:absolute;left:694px;top:103px;height:768px;width:3px;background:#ffffffb5}
+.brand{position:absolute;left:72px;bottom:51px;color:#fff;z-index:2;line-height:.75;display:flex;align-items:flex-end;gap:4px;text-shadow:0 2px 3px #63270944}
+.brand .virgin{font:italic 76px Georgia,serif;letter-spacing:-6px;transform:rotate(-10deg) translateY(-14px);transform-origin:left bottom}
+.brand .active{font:normal 57px Arial,Helvetica,sans-serif;letter-spacing:-5px}
+/* Slide 2: programma */
+.program-title{position:absolute;left:71px;top:91px;width:590px;color:white}
+.program-title h1{margin:0;font:700 83px/.97 Gotham,Arial,sans-serif;letter-spacing:-2px}
+.program-title p{font:normal 39px/1.12 Arial,sans-serif;margin:37px 0 0;text-transform:uppercase;letter-spacing:.3px}
+.program-title .rule{height:4px;width:151px;background:white;margin-top:38px}
+.date-card{position:absolute;top:495px;left:69px;width:600px;height:161px;border-radius:24px;background:linear-gradient(110deg,#a8001b,#c70024);display:flex;align-items:center;gap:28px;padding:21px 28px;color:#fff}
+.date-card svg{flex:0 0 83px;width:83px;height:83px;stroke:#fff;stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+#event-date{font:700 45px/1.04 Gotham,Arial,sans-serif;letter-spacing:-.8px;display:block;min-width:0;overflow-wrap:normal}
+.book-card{position:absolute;top:698px;left:69px;width:600px;min-height:134px;border:3px solid #fff;border-radius:24px;background:rgba(95,37,12,.06);display:flex;align-items:center;gap:27px;padding:15px 28px;color:white}
+.book-card svg{width:85px;height:85px;flex:0 0 85px;fill:none;stroke:#fff;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round}
+#booking-info{font:700 32px/1.12 Gotham,Arial,sans-serif;overflow-wrap:break-word}
+.table{position:absolute;left:725px;top:101px;width:1123px;height:754px;background:var(--ivory);border:3px solid #fff5e9;border-radius:29px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 18px 35px #3d140b24}
+.table-head{flex:0 0 69px;background:linear-gradient(90deg,#a5001b,#bd001c);color:#fff;display:grid;grid-template-columns:167px 77px minmax(0,1fr) 295px;align-items:center;padding:0 22px;font:700 34px Gotham,Arial}
+.table-head span:first-child{grid-column:1}.table-head span:nth-child(2){grid-column:3}.table-head span:nth-child(3){grid-column:4;text-align:center}
+.table-body{flex:1;min-height:0;display:flex;flex-direction:column}
+.ritual-row{min-height:0;flex:1;display:grid;grid-template-columns:167px 77px minmax(0,1fr) 295px;padding:0 22px;align-items:center;border-bottom:2px solid white;color:#080808;background:#ffefe4}
+.ritual-row:nth-child(even){background:#fae9dd}.ritual-row:last-child{border-bottom:0}
+.r-time{font:700 34px Gotham,Arial;letter-spacing:-.7px}
+.r-icon{display:flex;align-items:center;justify-content:center;width:57px;height:54px}
+.r-icon svg{width:49px;height:49px;fill:none;stroke:#111;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.r-icon.hot svg{stroke:#b90025}
+.r-name{font:700 27px/1.11 Gotham,Arial,sans-serif;letter-spacing:-.6px;padding-right:9px;overflow-wrap:break-word}
+.r-label{justify-self:center;width:284px;min-height:48px;display:flex;justify-content:center;align-items:center;text-align:center;background:#f9e2c9;color:#21140d;border:2px solid #ac783c;border-radius:40px;font:700 25px/1.08 Gotham,Arial;padding:6px 8px}
+.r-label.status{color:white;background:#33923b;border-color:#33923b;font-size:23px}.r-label.status.now{background:#b80020;border-color:#b80020}.r-label.status.done{background:#6a6867;border-color:#6a6867}
+/* Slide 3: calendario - UN SOLO pannello. Nessuna fotografia con tabella pre-stampata. */
+.calendar-left{position:absolute;left:139px;top:171px;width:539px;color:white;text-align:center}
+.calendar-left h1{text-align:left;margin:0;font:700 78px/.98 Gotham,Arial;letter-spacing:-2px}
+.calendar-left .line{height:3px;background:#ffffffd1;width:510px;margin:39px 0 54px}
+.calendar-left h2{margin:0;font:700 57px/1.09 Gotham,Arial}
+.cal-divider{left:707px;top:101px;height:826px}
+.calendar-panel{position:absolute;left:750px;top:101px;width:1105px;height:825px;border:3px solid #f6d5ad;border-radius:50px;background:linear-gradient(100deg,#703415f2,#89431def);padding:19px 30px;display:flex;flex-direction:column;box-shadow:0 16px 32px #2e11071b}
+.cal-row{height:20%;flex:1;display:grid;grid-template-columns:208px 1fr;align-items:center;gap:36px;padding:0 12px;border-bottom:1px solid #e1b78780;opacity:0;transform:translateY(-13px)}.cal-row:last-child{border-bottom:0}
+.cal-row.play{animation:reveal .34s ease both}
+.cal-tile{height:138px;width:207px;border-radius:30px;background:#f9dcb4;color:#221308;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.cal-row:first-child .cal-tile{background:#b00023;color:white;border:3px solid #fff0dd}
+.cal-num{font:700 73px/.96 Gotham,Arial}.cal-month{font:700 34px Gotham,Arial;margin-top:5px}
+.cal-weekday{font:700 60px/1.08 Gotham,Arial;color:#fff}.cal-full{font:normal 39px/1.13 Arial,sans-serif;color:#fff;margin-top:1px}
+@keyframes reveal{from{opacity:0;transform:translateY(-13px)}to{opacity:1;transform:translateY(0)}}
+.empty{display:flex;align-items:center;justify-content:center;height:100%;color:#3c2215;font:700 32px Gotham,Arial;text-align:center;padding:25px}
+@media(prefers-reduced-motion:reduce){.slide{transition:none}.cal-row.play{animation:none;opacity:1;transform:none}}
 </style>
 </head>
-<body>
-<div id="stage">
-  <section class="slide active" id="s-marketing"><img id="poster" src="cartello.jpg" alt="Cartello marketing originale"></section>
-  <section class="slide" id="s-rituali">
-    <div class="wood"></div><div class="vert"></div>
-    <div class="left"><h1 class="head">RITUALI<br>BENESSERE</h1><div class="subtitle">UN VIAGGIO TRA VAPORE<br>E AROMI ESSENZIALI<br>CHE RIGENERANO I SENSI.</div><div class="shortline"></div>
-      <div class="eventdate"><svg viewBox="0 0 80 80" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"><rect x="12" y="17" width="56" height="54" rx="7"/><path d="M12 33H68M27 7V26M53 7V26"/></svg><strong id="event-date">PROSSIMO<br>EVENTO</strong></div>
-      <div class="book"><svg viewBox="0 0 80 80" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"><circle cx="40" cy="19" r="13"/><path d="M13 69V54c0-14 13-21 27-21s27 7 27 21v15z"/></svg><span id="booking-info">PRENOTAZIONI<br>IN RECEPTION</span></div>
-    </div>
-    <div class="tablearea"><div class="tableheading"><span>ORARIO</span><span>RITUALE</span><span id="third-label">LOCATION</span></div><div id="ritual-rows" class="rows"><div class="empty">Calendario in aggiornamento</div></div></div>
-    <div class="dynamic-date" id="ritual-date-overlay"></div>
-    <div class="dynamic-book" id="ritual-book-overlay"></div>
-    <div class="dynamic-col-title" id="ritual-label-overlay">LOCATION</div>
-    <div class="dynamic-rows" id="ritual-rows-overlay"></div>
-  </section>
-  <section class="slide" id="s-calendario">
-    <div class="wood dark"></div><div class="vert" style="left:704px;height:832px;top:100px"></div>
-    <div class="calleft"><h1 class="head">RITUALI<br>BENESSERE</h1><div class="shortline"></div><div class="cal-sub">PROSSIMI<br>APPUNTAMENTI</div></div>
-    <div class="calendar-wrap" id="calendar-rows"><div class="empty" style="color:#fff">Date in aggiornamento</div></div>
-  </section>
-</div>
+<body><main id="stage" aria-label="Rituali Benessere - VTV">
+<section class="slide active" id="slide-marketing"><img id="marketing" src="cartello.jpg" alt="Cartello marketing ufficiale"></section>
+<section class="slide" id="slide-program">
+  <div class="wood-light"></div><div class="vline"></div>
+  <div class="program-title"><h1>RITUALI<br>BENESSERE</h1><p>UN VIAGGIO TRA VAPORE<br>E AROMI ESSENZIALI<br>CHE RIGENERANO I SENSI.</p><div class="rule"></div></div>
+  <div class="date-card"><svg viewBox="0 0 80 80"><rect x="12" y="17" width="56" height="53" rx="7"/><path d="M12 33h56M27 7v20M53 7v20"/></svg><span id="event-date">PROSSIMO EVENTO</span></div>
+  <div class="book-card"><svg viewBox="0 0 80 80"><circle cx="40" cy="20" r="12"/><path d="M13 69V55c0-13 12-21 27-21s27 8 27 21v14z"/></svg><span id="booking-info">PRENOTAZIONI IN RECEPTION</span></div>
+  <div class="table"><div class="table-head"><span>ORARIO</span><span>RITUALE</span><span id="third-title">LOCATION</span></div><div class="table-body" id="program-rows"></div></div>
+  <div class="brand"><span class="virgin">Virgin</span><span class="active">active</span></div>
+</section>
+<section class="slide" id="slide-calendar">
+  <div class="wood-dark"></div><div class="vline cal-divider"></div>
+  <div class="calendar-left"><h1>RITUALI<br>BENESSERE</h1><div class="line"></div><h2>PROSSIMI<br>APPUNTAMENTI</h2></div>
+  <div class="calendar-panel" id="calendar-rows"></div>
+  <div class="brand"><span class="virgin">Virgin</span><span class="active">active</span></div>
+</section>
+</main>
 <script>
-(() => {
-'use strict';
-const standard=[
- ['10:30','Scrub viso e corpo Frutti Rossi','Bagno Turco'],
- ['11:30','Maschera viso','Infrared'],
- ['12:30','Aufguss balsamico','Sauna'],
- ['13:15','Maschera viso','Infrared'],
- ['14:00','Maschera viso','Area esterna'],
- ['15:45','Aufguss balsamico','Sauna'],
- ['16:30','Maschera viso','Area esterna'],
- ['17:15','Savonage con sapone nero marocchino','Bagno Turco'],
- ['18:00','Maschera viso','Infrared'],
- ['19:15','Aufguss balsamico','Sauna']
-].map((a,i)=>({id:'r'+i,time:a[0],name:a[1],area:a[2],duration:10}));
-let data={events:[],standard};
-const demo=new URLSearchParams(location.search).has('demo');
-if(demo){const dates=['2026-11-27','2026-12-04','2027-01-15','2027-02-12','2027-03-19'];data.events=dates.map((date,i)=>({id:'demo'+i,date,program:standard}));}
+(()=>{'use strict';
+const fallback=[['10:30','Scrub viso e corpo Frutti Rossi','Bagno Turco'],['11:30','Maschera viso','Infrared'],['12:30','Aufguss balsamico','Sauna'],['13:15','Maschera viso','Infrared'],['14:00','Maschera viso','Area esterna'],['15:45','Aufguss balsamico','Sauna'],['16:30','Maschera viso','Area esterna'],['17:15','Savonage con sapone nero marocchino','Bagno Turco'],['18:00','Maschera viso','Infrared'],['19:15','Aufguss balsamico','Sauna']].map((x,i)=>({id:'r'+i,time:x[0],name:x[1],area:x[2],duration:10}));
+let data={events:[],standard:fallback};const demo=new URLSearchParams(location.search).has('demo');
+if(demo)data.events=['2026-11-27','2026-12-04','2027-01-15','2027-02-12','2027-03-19'].map((date,i)=>({id:'demo'+i,date,program:fallback}));
 const $=s=>document.querySelector(s);
-function parseDate(date){let [y,m,d]=String(date).split('-').map(Number);const result=new Date(y,m-1,d,12);return result.getFullYear()===y&&result.getMonth()===m-1&&result.getDate()===d?result:null}
-function italianDate(date,opts){return parseDate(date)?.toLocaleDateString('it-IT',opts)||''}
-function todayKey(){const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Rome',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const get=k=>parts.find(x=>x.type===k)?.value;return `${get('year')}-${get('month')}-${get('day')}`}
-function romeHHMM(){return new Intl.DateTimeFormat('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date())}
-function minusDays(s,days){let d=parseDate(s);if(!d)return '';d.setDate(d.getDate()-days);return d.toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}).toUpperCase()}
-function escaped(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function icons(area){
- const a=String(area||'').toLowerCase();
- if(a.includes('turco')) return `<svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="19" cy="16" r="8"/><circle cx="41" cy="14" r="5"/><circle cx="23" cy="38" r="5"/><circle cx="42" cy="43" r="8"/></svg>`;
- if(a.includes('infra')) return `<svg viewBox="0 0 60 60" aria-hidden="true"><path d="M9 47 C9 21 24 11 50 9 C50 34 37 51 14 49"/><path d="M9 52 Q27 34 45 17"/></svg>`;
- if(a.includes('sauna')) return `<svg viewBox="0 0 60 60" aria-hidden="true"><path d="M15 11 C3 25 25 27 13 43 M30 9 C17 23 40 27 27 44 M45 11 C32 24 54 29 42 44"/><path d="M7 52 Q30 60 54 52"/></svg>`;
- return `<svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 7V53 M7 30H53 M14 14L46 46 M46 14L14 46"/></svg>`;
+function parseDate(s){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s));if(!m)return null;const d=new Date(+m[1],+m[2]-1,+m[3],12);return d.getFullYear()===+m[1]&&d.getMonth()===+m[2]-1&&d.getDate()===+m[3]?d:null}
+function dateText(s,options){const d=parseDate(s);return d?d.toLocaleDateString('it-IT',options):''}
+function romeParts(){const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Rome',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());const v=x=>parts.find(p=>p.type===x)?.value;return{date:`${v('year')}-${v('month')}-${v('day')}`,minute:+v('hour')*60+(+v('minute'))}}
+function getEvents(){const now=romeParts().date;return (data.events||[]).filter(e=>parseDate(e.date)&&e.date>=now).slice().sort((a,b)=>a.date.localeCompare(b.date))}
+function startBooking(s){const d=parseDate(s);if(!d)return '';d.setDate(d.getDate()-7);return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function icon(area){const a=String(area||'').toLowerCase();if(a.includes('turco'))return '<svg viewBox="0 0 60 60"><circle cx="19" cy="15" r="7"/><circle cx="42" cy="13" r="5"/><circle cx="22" cy="37" r="5"/><circle cx="43" cy="42" r="8"/></svg>';if(a.includes('infra'))return '<svg viewBox="0 0 60 60"><path d="M9 48C8 25 25 10 51 9c-1 26-14 42-40 41"/><path d="M11 51L44 17"/></svg>';if(a.includes('sauna'))return '<svg viewBox="0 0 60 60"><path d="M14 8C2 21 24 27 12 44M30 7C17 22 40 29 27 45M46 8C32 22 54 30 41 45"/><path d="M7 52Q30 60 54 52"/></svg>';return '<svg viewBox="0 0 60 60"><path d="M30 7v46M7 30h46M14 14l32 32M46 14L14 46"/></svg>'}
+function status(r,minute){const x=/^(\d{1,2}):(\d{2})$/.exec(String(r.time||''));if(!x)return 'IN PROGRAMMA';const start=+x[1]*60+(+x[2]);const duration=Number(r.duration)||10;return minute<start?'IN PROGRAMMA':minute<start+duration?'IN CORSO':'CONCLUSO'}
+function formatArea(a){const s=String(a||'');if(s.toLowerCase().includes('turco'))return 'Bagno Turco';if(s.toLowerCase().includes('infra'))return 'Infrared';if(s.toLowerCase()==='sauna')return 'Sauna';return s}
+let lastProgramKey='';function renderProgram(force=false){const e=getEvents()[0];const now=romeParts();const key=JSON.stringify([e?.date,now.date,now.minute,e?.program||data.standard]);if(!force&&key===lastProgramKey)return;lastProgramKey=key;
+if(!e){$('#event-date').textContent='PROSSIMO\nEVENTO';$('#booking-info').textContent='DATE IN\nAGGIORNAMENTO';$('#third-title').textContent='LOCATION';$('#program-rows').innerHTML='<div class="empty">Programma in aggiornamento</div>';return}
+const d=parseDate(e.date);const dateString=`${dateText(e.date,{weekday:'long'}).toUpperCase()}\n${d.getDate()} ${dateText(e.date,{month:'long'}).toUpperCase()}\n${d.getFullYear()}`;$('#event-date').textContent=dateString;
+const open=startBooking(e.date);$('#booking-info').textContent=now.date<open?'PRENOTAZIONI APERTE\nDAL '+dateText(open,{day:'numeric',month:'long'}).toUpperCase():'PRENOTAZIONI APERTE\nIN RECEPTION';
+const today=now.date===e.date;$('#third-title').textContent=today?'STATO':'LOCATION';const rows=(Array.isArray(e.program)?e.program:data.standard||fallback).slice().sort((a,b)=>String(a.time).localeCompare(String(b.time)));
+$('#program-rows').innerHTML=rows.length?rows.map(r=>{const st=today?status(r,now.minute):null;const cl=st==='IN CORSO'?'now':st==='CONCLUSO'?'done':'';const a=String(r.area||'');return `<div class="ritual-row"><span class="r-time">${esc(r.time||'')}</span><span class="r-icon ${a.toLowerCase()==='sauna'?'hot':''}">${icon(a)}</span><span class="r-name">${esc(r.name||'')}</span><span class="r-label ${today?'status '+cl:''}">${today?st:esc(formatArea(a))}</span></div>`}).join(''):'<div class="empty">Programma in aggiornamento</div>';
 }
-function events(){const t=todayKey();return (data.events||[]).filter(e=>parseDate(e.date)&&e.date>=t).sort((a,b)=>a.date.localeCompare(b.date));}
-function getRitualStatus(ritual){const t=romeHHMM();const [hh,mm]=String(ritual.time).split(':').map(Number);const start=hh*60+mm;const end=start+(Number(ritual.duration)||10);const [nowH,nowM]=t.split(':').map(Number);const current=nowH*60+nowM;return current<start?'IN PROGRAMMA':current<end?'IN CORSO':'CONCLUSO';}
-function renderProgram(){const next=events()[0];const els=$('#ritual-rows');if(!next){$('#event-date').textContent='PROSSIMO\nEVENTO';$('#booking-info').textContent='DATE IN\nAGGIORNAMENTO';$('#third-label').textContent='LOCATION';els.innerHTML='<div class="empty">Calendario in aggiornamento</div>';$('#ritual-date-overlay').textContent='PROSSIMO\nEVENTO';$('#ritual-book-overlay').textContent='DATE IN\nAGGIORNAMENTO';$('#ritual-rows-overlay').innerHTML='<div class="empty">Calendario in aggiornamento</div>';return;}
- $('#event-date').textContent=italianDate(next.date,{weekday:'long',day:'numeric',month:'long',year:'numeric'}).replace(/^(\S+)\s/,'$1\n').toUpperCase();
- let t=todayKey();const release=parseDate(next.date);release.setDate(release.getDate()-7);const opens=`${release.getFullYear()}-${String(release.getMonth()+1).padStart(2,'0')}-${String(release.getDate()).padStart(2,'0')}`;
- $('#booking-info').textContent=t<opens?`PRENOTAZIONI APERTE\nDAL ${minusDays(next.date,7)}`:'PRENOTAZIONI APERTE\nIN RECEPTION';
- const today=t===next.date;$('#third-label').textContent=today?'STATO':'LOCATION';const program=Array.isArray(next.program)?next.program:(data.standard||standard);
- if(!program.length){els.innerHTML='<div class="empty">Programma in aggiornamento</div>';return;}
- const sorted=program.slice().sort((a,b)=>String(a.time).localeCompare(String(b.time)));
- els.innerHTML=sorted.map(r=>{const status=today?getRitualStatus(r):null;const cls=status==='IN CORSO'?'current':status==='CONCLUSO'?'ended':'';return `<div class="ritual-row"><div class="time">${escaped(r.time||'')}</div><div class="ritual-main"><div class="icon-rit">${icons(r.area)}</div><div class="name">${escaped(r.name||'')}</div></div><div>${today?`<span class="statetag ${cls}">${status}</span>`:`<div class="loctag">${escaped(r.area||'')}</div>`}</div></div>`;}).join('');
- $('#ritual-date-overlay').textContent=$('#event-date').textContent;
- $('#ritual-book-overlay').textContent=$('#booking-info').textContent;
- $('#ritual-label-overlay').textContent=today?'STATO':'LOCATION';
- $('#ritual-rows-overlay').innerHTML=sorted.map(r=>{
-   const status=today?getRitualStatus(r):null;
-   const cls=status==='IN CORSO'?'current':status==='CONCLUSO'?'ended':'';
-   const area=String(r.area||'');
-   const category=area.toLowerCase().includes('sauna')&&!area.toLowerCase().includes('infra')?'steam':area.toLowerCase().includes('turco')?'bubbles':'leaf';
-   const label=area.toLowerCase().includes('turco')?'Bagno Turco':area.toLowerCase().includes('infra')?'Infrared':area.toLowerCase()==='sauna'?'Sauna':area;
-   return `<div class="dynamic-row"><span class="dynamic-time">${escaped(r.time||'')}</span><span class="dynamic-icon ${category}">${icons(area)}</span><span class="dynamic-name">${escaped(r.name||'')}</span><span class="dynamic-place ${today?'status '+cls:''}">${today?status:escaped(label)}</span></div>`;
- }).join('');
- }
-function renderCalendar(){const list=events().slice(0,5);const wrap=$('#calendar-rows');if(!list.length){wrap.innerHTML='<div class="empty" style="color:white">Date in aggiornamento</div>';return;}
- wrap.innerHTML=list.map(e=>{const d=parseDate(e.date);return `<div class="calendar-row"><div class="tile"><span class="num">${d.getDate()}</span><span class="month">${italianDate(e.date,{month:'short'}).replace('.','').toUpperCase()}</span></div><div><div class="weekday">${italianDate(e.date,{weekday:'long'}).toUpperCase()}</div><div class="datefull">${italianDate(e.date,{day:'numeric',month:'long',year:'numeric'})}</div></div></div>`;}).join('');
-}
-const slides=[{el:$('#s-marketing'),ms:10000},{el:$('#s-rituali'),ms:15000},{el:$('#s-calendario'),ms:10000}];let index=0;let last=Date.now();let lastClock='';function display(i){slides.forEach((s,j)=>s.el.classList.toggle('active',j===i));if(i===1)renderProgram();if(i===2){renderCalendar();$('#calendar-rows').querySelectorAll('.calendar-row').forEach((r,j)=>{r.classList.remove('play');r.style.animationDelay=`${.2+j*.2}s`;void r.offsetWidth;r.classList.add('play');});}}
-function tick(){const now=Date.now();if(now-last>=slides[index].ms){index=(index+1)%slides.length;last=now;display(index);}if(slides[index].el.id==='s-rituali'){const clock=todayKey()+' '+romeHHMM();if(lastClock!==clock){lastClock=clock;renderProgram();}}}
-async function load(){if(demo)return;try{const res=await fetch('eventi.json?t='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('HTTP '+res.status);const obj=await res.json();if(Array.isArray(obj.events)&&Array.isArray(obj.standard)){data=obj;}}catch(err){console.warn('Calendario non pubblicato:',err.message);} }
-function resize(){const scale=Math.max(innerWidth/1920,innerHeight/1080);document.documentElement.style.setProperty('--scale',scale);}
-window.addEventListener('resize',resize);resize();
-load().then(()=>{display(0);setInterval(tick,1000);setInterval(async()=>{await load();if(index===1)renderProgram();},60000)});
+function renderCalendar(){const rows=getEvents().slice(0,5);$('#calendar-rows').innerHTML=rows.length?rows.map(e=>{const d=parseDate(e.date);return `<div class="cal-row"><div class="cal-tile"><span class="cal-num">${d.getDate()}</span><span class="cal-month">${esc(dateText(e.date,{month:'short'}).replace('.','').toUpperCase())}</span></div><div><div class="cal-weekday">${esc(dateText(e.date,{weekday:'long'}).toUpperCase())}</div><div class="cal-full">${esc(dateText(e.date,{day:'numeric',month:'long',year:'numeric'}))}</div></div></div>`}).join(''):'<div class="empty" style="color:white">Nuove date in aggiornamento</div>'}
+const slides=[{el:$('#slide-marketing'),duration:10000},{el:$('#slide-program'),duration:15000},{el:$('#slide-calendar'),duration:10000}];let current=0,started=Date.now();function switchTo(n){current=n;slides.forEach((s,i)=>s.el.classList.toggle('active',i===n));if(n===1)renderProgram(true);if(n===2){renderCalendar();$('#calendar-rows').querySelectorAll('.cal-row').forEach((r,i)=>{r.style.animationDelay=(.2+i*.2)+'s';r.classList.remove('play');void r.offsetWidth;r.classList.add('play')})}}
+function resize(){document.documentElement.style.setProperty('--scale',Math.max(innerWidth/1920,innerHeight/1080))}addEventListener('resize',resize);resize();
+async function load(){if(demo)return;try{const response=await fetch('./eventi.json?ts='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);const obj=await response.json();if(Array.isArray(obj.events)&&Array.isArray(obj.standard))data=obj}catch(e){console.warn('Calendario non disponibile',e)}}
+load().then(()=>{switchTo(0);setInterval(()=>{if(Date.now()-started>=slides[current].duration){started=Date.now();switchTo((current+1)%slides.length)}else if(current===1)renderProgram()},1000);setInterval(async()=>{await load();lastProgramKey='';if(current===1)renderProgram(true)},60000)});
 })();
 </script>
-</body>
-</html>
+</body></html>
