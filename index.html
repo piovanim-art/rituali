@@ -213,9 +213,10 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 
 <script>
 (()=>{'use strict';
-// COLLEGAMENTO GOOGLE SHEETS: inserire SOLO l'ID del documento, non l'URL completo.
-// La scheda "Rituali" deve essere accessibile in sola lettura (Pubblica sul web).
-const CONFIG={sheetId:'',sheetName:'Rituali',refreshMs:60000,slideTimes:[10000,15000,10000]};
+// Google Sheets collegato al documento esistente, scheda Rituali (gid specifico).
+// Il documento deve consentire la lettura pubblica o essere pubblicato sul web.
+// Il Foglio1 delle News non viene letto né modificato.
+const CONFIG={sheetId:'1scvqeVh8AE5XT-RN7b3vnmB6aiioYqNAXcPiBWTydVU',sheetGid:'519917730',sheetName:'Rituali',refreshMs:60000,slideTimes:[10000,15000,10000]};
 const demo=new URLSearchParams(location.search).has('demo');
 const standardDemo=[
 ['10:30','Scrub viso e corpo Frutti Rossi','Bagno Turco',10],
@@ -276,7 +277,7 @@ async function readGoogleSheet(){
    tag.onerror=()=>{clean();reject(Error('Impossibile leggere Google Sheets'))};
    timer=setTimeout(()=>{clean();reject(Error('Timeout Google Sheets'))},12000);
    const tqx=encodeURIComponent(`out:json;responseHandler:${callback}`);
-   tag.src=`https://docs.google.com/spreadsheets/d/${encodeURIComponent(CONFIG.sheetId)}/gviz/tq?tqx=${tqx}&sheet=${encodeURIComponent(CONFIG.sheetName)}&headers=0&_=${Date.now()}`;
+   tag.src=`https://docs.google.com/spreadsheets/d/${encodeURIComponent(CONFIG.sheetId)}/gviz/tq?tqx=${tqx}&gid=${encodeURIComponent(CONFIG.sheetGid)}&headers=0&_=${Date.now()}`;
    document.head.appendChild(tag);
  });
 }
@@ -289,7 +290,7 @@ function icon(area,name){
  return '<svg viewBox="0 0 60 60"><path d="M30 8v44M8 30h44M14 14l32 32M46 14L14 46"/></svg>';
 }
 function calcStatus(row,minutes){const m=String(row.time).match(/^(\d\d):(\d\d)$/);if(!m)return {text:'',cls:''};let start=+m[1]*60+(+m[2]);const duration=Number(row.duration)||10;
- if(minutes<start){const diff=start-minutes;return{text:`-${String(Math.floor(diff/60)).padStart(2,'0')}:${String(diff%60).padStart(2,'0')}`,cls:''}};
+ if(minutes<start){const diff=start-minutes;return{text:`${String(Math.floor(diff/60)).padStart(2,'0')}:${String(diff%60).padStart(2,'0')}`,cls:''}};
  if(minutes<start+duration)return{text:'IN CORSO',cls:'running'};
  return{text:'CONCLUSO',cls:'finished'};
 }
