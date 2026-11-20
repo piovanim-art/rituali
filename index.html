@@ -296,7 +296,7 @@ function icon(area,name){
  return '<svg viewBox="0 0 60 60"><path d="M30 8v44M8 30h44M14 14l32 32M46 14L14 46"/></svg>';
 }
 function calcStatus(row,minutes){const m=String(row.time).match(/^(\d\d):(\d\d)$/);if(!m)return {text:'',cls:''};let start=+m[1]*60+(+m[2]);const duration=Number(row.duration)||10;
- if(minutes<start){const diff=start-minutes;return{text:`${String(Math.floor(diff/60)).padStart(2,'0')}:${String(diff%60).padStart(2,'0')}`,cls:''}};
+ if(minutes<start){const diff=start-minutes;const h=Math.floor(diff/60),m=diff%60;return{text:h?`TRA ${h} H${m?' '+m+' MIN':''}`:`TRA ${m} MIN`,cls:''}};
  if(minutes<start+duration)return{text:'IN CORSO',cls:'running'};
  return{text:'CONCLUSO',cls:'finished'};
 }
