@@ -46,6 +46,39 @@
 .empty{display:flex;align-items:center;justify-content:center;color:#5c3520;height:100%;font:700 32px Gotham,Arial;text-align:center;padding:40px}
 #debug{position:absolute;z-index:12;bottom:6px;right:8px;opacity:0;font-size:12px;color:white}
 @media(prefers-reduced-motion:reduce){.slide,.slide.active{transition:none}.calendar-row.play{animation:none;opacity:1;transform:none}}
+
+/* SLIDE 2: ricostruita sull'immagine di riferimento approvata.
+   Le altre due schermate non vengono modificate. */
+#s-rituali{background:#a34c18 url('assets/rituali-layout.png') center center/100% 100% no-repeat}
+#s-rituali>.wood,#s-rituali>.vert,#s-rituali>.left,#s-rituali>.tablearea{display:none}
+#s-rituali .dynamic-date{position:absolute;left:211px;top:506px;width:433px;height:124px;z-index:4;
+ background:linear-gradient(100deg,#b50121,#c50020);display:flex;align-items:center;
+ color:#fff;font:700 49px/1.02 Gotham,Arial,sans-serif;white-space:pre-line;letter-spacing:-1px}
+#s-rituali .dynamic-book{position:absolute;left:185px;top:684px;width:455px;height:106px;z-index:4;
+ background:linear-gradient(90deg,#b84d12,#aa4611);display:flex;align-items:center;
+ color:#fff;font:700 32px/1.09 Gotham,Arial,sans-serif;white-space:pre-line;letter-spacing:-.5px}
+#s-rituali .dynamic-col-title{position:absolute;left:1524px;top:89px;width:300px;height:65px;z-index:4;
+ display:flex;align-items:center;justify-content:center;background:#b20019;
+ color:#fff;font:700 34px Gotham,Arial,sans-serif}
+#s-rituali .dynamic-rows{position:absolute;left:708px;top:153px;width:1140px;height:651px;
+ display:flex;flex-direction:column;z-index:3;overflow:hidden;border-radius:0 0 25px 0}
+#s-rituali .dynamic-row{flex:1;min-height:0;display:grid;grid-template-columns:172px 95px minmax(0,1fr) 325px;
+ align-items:center;padding:0 18px 0 27px;border-bottom:2px solid #fff;
+ background:#fff0e6;color:#111}
+#s-rituali .dynamic-row:nth-child(even){background:#fcebe0}
+#s-rituali .dynamic-row:last-child{border-bottom:0}
+#s-rituali .dynamic-time{font:700 36px Gotham,Arial,sans-serif}
+#s-rituali .dynamic-icon{display:flex;align-items:center;justify-content:center;width:64px;height:54px}
+#s-rituali .dynamic-icon svg{width:53px;height:53px;fill:none;stroke:#0a0a0a;stroke-width:3.6;stroke-linecap:round;stroke-linejoin:round}
+#s-rituali .dynamic-icon.steam svg{stroke:#c00023}
+#s-rituali .dynamic-name{font:700 28px/1.06 Gotham,Arial,sans-serif;letter-spacing:-.8px;overflow-wrap:anywhere}
+#s-rituali .dynamic-place{justify-self:center;width:295px;min-height:49px;border-radius:34px;
+ border:2px solid #a46c38;background:#fae3cc;color:#1f1612;
+ display:flex;justify-content:center;align-items:center;text-align:center;
+ font:700 27px/1.08 Gotham,Arial,sans-serif;padding:3px 7px}
+#s-rituali .dynamic-place.status{border-color:transparent;background:#28904c;color:white;font-size:23px}
+#s-rituali .dynamic-place.status.current{background:#b20024}
+#s-rituali .dynamic-place.status.ended{background:#777}
 </style>
 </head>
 <body>
@@ -58,6 +91,10 @@
       <div class="book"><svg viewBox="0 0 80 80" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"><circle cx="40" cy="19" r="13"/><path d="M13 69V54c0-14 13-21 27-21s27 7 27 21v15z"/></svg><span id="booking-info">PRENOTAZIONI<br>IN RECEPTION</span></div>
     </div>
     <div class="tablearea"><div class="tableheading"><span>ORARIO</span><span>RITUALE</span><span id="third-label">LOCATION</span></div><div id="ritual-rows" class="rows"><div class="empty">Calendario in aggiornamento</div></div></div>
+    <div class="dynamic-date" id="ritual-date-overlay"></div>
+    <div class="dynamic-book" id="ritual-book-overlay"></div>
+    <div class="dynamic-col-title" id="ritual-label-overlay">LOCATION</div>
+    <div class="dynamic-rows" id="ritual-rows-overlay"></div>
   </section>
   <section class="slide" id="s-calendario">
     <div class="wood dark"></div><div class="vert" style="left:704px;height:832px;top:100px"></div>
@@ -90,10 +127,16 @@ function todayKey(){const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Europ
 function romeHHMM(){return new Intl.DateTimeFormat('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date())}
 function minusDays(s,days){let d=parseDate(s);if(!d)return '';d.setDate(d.getDate()-days);return d.toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}).toUpperCase()}
 function escaped(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function icons(area){const a=String(area).toLowerCase();return a.includes('turco')?'◌':a.includes('infra')?'♨':a.includes('sauna')?'♧':'✧'}
+function icons(area){
+ const a=String(area||'').toLowerCase();
+ if(a.includes('turco')) return `<svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="19" cy="16" r="8"/><circle cx="41" cy="14" r="5"/><circle cx="23" cy="38" r="5"/><circle cx="42" cy="43" r="8"/></svg>`;
+ if(a.includes('infra')) return `<svg viewBox="0 0 60 60" aria-hidden="true"><path d="M9 47 C9 21 24 11 50 9 C50 34 37 51 14 49"/><path d="M9 52 Q27 34 45 17"/></svg>`;
+ if(a.includes('sauna')) return `<svg viewBox="0 0 60 60" aria-hidden="true"><path d="M15 11 C3 25 25 27 13 43 M30 9 C17 23 40 27 27 44 M45 11 C32 24 54 29 42 44"/><path d="M7 52 Q30 60 54 52"/></svg>`;
+ return `<svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 7V53 M7 30H53 M14 14L46 46 M46 14L14 46"/></svg>`;
+}
 function events(){const t=todayKey();return (data.events||[]).filter(e=>parseDate(e.date)&&e.date>=t).sort((a,b)=>a.date.localeCompare(b.date));}
 function getRitualStatus(ritual){const t=romeHHMM();const [hh,mm]=String(ritual.time).split(':').map(Number);const start=hh*60+mm;const end=start+(Number(ritual.duration)||10);const [nowH,nowM]=t.split(':').map(Number);const current=nowH*60+nowM;return current<start?'IN PROGRAMMA':current<end?'IN CORSO':'CONCLUSO';}
-function renderProgram(){const next=events()[0];const els=$('#ritual-rows');if(!next){$('#event-date').textContent='PROSSIMO\nEVENTO';$('#booking-info').textContent='DATE IN\nAGGIORNAMENTO';$('#third-label').textContent='LOCATION';els.innerHTML='<div class="empty">Calendario in aggiornamento</div>';return;}
+function renderProgram(){const next=events()[0];const els=$('#ritual-rows');if(!next){$('#event-date').textContent='PROSSIMO\nEVENTO';$('#booking-info').textContent='DATE IN\nAGGIORNAMENTO';$('#third-label').textContent='LOCATION';els.innerHTML='<div class="empty">Calendario in aggiornamento</div>';$('#ritual-date-overlay').textContent='PROSSIMO\nEVENTO';$('#ritual-book-overlay').textContent='DATE IN\nAGGIORNAMENTO';$('#ritual-rows-overlay').innerHTML='<div class="empty">Calendario in aggiornamento</div>';return;}
  $('#event-date').textContent=italianDate(next.date,{weekday:'long',day:'numeric',month:'long',year:'numeric'}).replace(/^(\S+)\s/,'$1\n').toUpperCase();
  let t=todayKey();const release=parseDate(next.date);release.setDate(release.getDate()-7);const opens=`${release.getFullYear()}-${String(release.getMonth()+1).padStart(2,'0')}-${String(release.getDate()).padStart(2,'0')}`;
  $('#booking-info').textContent=t<opens?`PRENOTAZIONI APERTE\nDAL ${minusDays(next.date,7)}`:'PRENOTAZIONI APERTE\nIN RECEPTION';
@@ -101,6 +144,17 @@ function renderProgram(){const next=events()[0];const els=$('#ritual-rows');if(!
  if(!program.length){els.innerHTML='<div class="empty">Programma in aggiornamento</div>';return;}
  const sorted=program.slice().sort((a,b)=>String(a.time).localeCompare(String(b.time)));
  els.innerHTML=sorted.map(r=>{const status=today?getRitualStatus(r):null;const cls=status==='IN CORSO'?'current':status==='CONCLUSO'?'ended':'';return `<div class="ritual-row"><div class="time">${escaped(r.time||'')}</div><div class="ritual-main"><div class="icon-rit">${icons(r.area)}</div><div class="name">${escaped(r.name||'')}</div></div><div>${today?`<span class="statetag ${cls}">${status}</span>`:`<div class="loctag">${escaped(r.area||'')}</div>`}</div></div>`;}).join('');
+ $('#ritual-date-overlay').textContent=$('#event-date').textContent;
+ $('#ritual-book-overlay').textContent=$('#booking-info').textContent;
+ $('#ritual-label-overlay').textContent=today?'STATO':'LOCATION';
+ $('#ritual-rows-overlay').innerHTML=sorted.map(r=>{
+   const status=today?getRitualStatus(r):null;
+   const cls=status==='IN CORSO'?'current':status==='CONCLUSO'?'ended':'';
+   const area=String(r.area||'');
+   const category=area.toLowerCase().includes('sauna')&&!area.toLowerCase().includes('infra')?'steam':area.toLowerCase().includes('turco')?'bubbles':'leaf';
+   const label=area.toLowerCase().includes('turco')?'Bagno Turco':area.toLowerCase().includes('infra')?'Infrared':area.toLowerCase()==='sauna'?'Sauna':area;
+   return `<div class="dynamic-row"><span class="dynamic-time">${escaped(r.time||'')}</span><span class="dynamic-icon ${category}">${icons(area)}</span><span class="dynamic-name">${escaped(r.name||'')}</span><span class="dynamic-place ${today?'status '+cls:''}">${today?status:escaped(label)}</span></div>`;
+ }).join('');
  }
 function renderCalendar(){const list=events().slice(0,5);const wrap=$('#calendar-rows');if(!list.length){wrap.innerHTML='<div class="empty" style="color:white">Date in aggiornamento</div>';return;}
  wrap.innerHTML=list.map(e=>{const d=parseDate(e.date);return `<div class="calendar-row"><div class="tile"><span class="num">${d.getDate()}</span><span class="month">${italianDate(e.date,{month:'short'}).replace('.','').toUpperCase()}</span></div><div><div class="weekday">${italianDate(e.date,{weekday:'long'}).toUpperCase()}</div><div class="datefull">${italianDate(e.date,{day:'numeric',month:'long',year:'numeric'})}</div></div></div>`;}).join('');
