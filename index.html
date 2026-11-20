@@ -135,37 +135,30 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 .calendar-invitation{font:700 22px/1.17 Gotham,Arial,sans-serif;margin:0;color:#fff}
 .calendar-subtitle{font:700 27px/1 Gotham,Arial,sans-serif;letter-spacing:-.5px;white-space:nowrap}
 .calendar-rule,.calendar-rule-secondary{width:505px}
-/* === SLIDE 3 — REVISIONE GRAFICA 20/11/2026 ===
-   Override mirato: slide 1, slide 2 e script restano invariati. */
-#slide-calendar .calendar-left{
-  left:100px;top:62px;width:665px;height:935px;
-}
-#slide-calendar .calendar-title{
-  font-size:78px;line-height:.96;letter-spacing:-2.1px;
-}
-#slide-calendar .calendar-intro{
-  font-size:39px;line-height:1.14;letter-spacing:-.5px;
-}
-#slide-calendar .calendar-description{
-  font-size:30px;line-height:1.27;max-width:640px;
-}
-#slide-calendar .calendar-invitation{font-size:30px;line-height:1.2}
-#slide-calendar .calendar-subtitle{
-  font-size:33px;line-height:1.05;letter-spacing:-.4px;
-}
-#slide-calendar .calendar-rule,
-#slide-calendar .calendar-rule-secondary{width:625px}
-#slide-calendar .calendar-separator{left:811px;top:45px;height:970px}
-#slide-calendar .calendar-panel{
-  left:862px;top:65px;width:977px;height:900px;
-  padding:22px 30px 20px;
-}
-#slide-calendar .calendar-row{
-  grid-template-columns:182px minmax(0,1fr);gap:22px;
-}
-#slide-calendar .calendar-tile{width:168px;height:129px}
-#slide-calendar .calendar-weekday{font-size:54px}
-#slide-calendar .calendar-full{font-size:33px}
+
+/* NOVEMBRE 2026 — programma a cinque colonne: location sempre visibile */
+.program-head,.program-row{grid-template-columns:135px 62px minmax(0,1fr) 205px 213px !important;padding-left:17px !important;padding-right:17px !important}
+.program-head .c-time{grid-column:1}
+.program-head .c-name{grid-column:3}
+.program-head .c-last{grid-column:5;text-align:center}
+.p-time{font-size:31px !important}
+.p-name{font-size:23px !important;line-height:1.06 !important}
+.p-icon svg{width:42px !important;height:42px !important}
+.p-countdown{font:700 21px/1.04 Gotham,Arial,sans-serif;color:#8c421e;text-align:center;white-space:nowrap}
+.p-countdown.running{color:#b80021}
+.p-countdown.finished{color:#77706c}
+.p-last{width:200px !important;min-height:44px !important;font-size:19px !important;padding:5px 6px !important}
+.program-row{transform:none !important;opacity:1}
+.program-row .row-content{display:contents}
+.program-row.play .p-time,.program-row.play .p-icon,.program-row.play .p-name,.program-row.play .p-countdown,.program-row.play .p-last{animation:ritualFade .32s ease-out both;animation-delay:var(--reveal-delay,0s)}
+@keyframes ritualFade{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+/* 16:9: riempimento con object-fit cover, senza fasce scure sulla TV */
+#slide-marketing img{object-fit:cover}
+#slide-program{background-image:url('./assets/sfondi-rituali.png') !important;background-position:center !important;background-size:cover !important}
+#slide-calendar{background-image:url('./assets/sfondo-calendario.png') !important;background-position:center !important;background-size:cover !important}
+#slide-program,#slide-calendar{font-family:Gotham,Arial,sans-serif}
+.calendar-description,.calendar-full,.calendar-invitation{font-family:Gotham,Arial,sans-serif !important}
+@media(prefers-reduced-motion:reduce){.program-row.play .p-time,.program-row.play .p-icon,.program-row.play .p-name,.program-row.play .p-countdown,.program-row.play .p-last{animation:none}}
 
 </style>
 </head>
@@ -184,18 +177,18 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
     <div class="program-separator"></div>
     <div class="program-date">
       <svg viewBox="0 0 80 80" aria-hidden="true"><rect x="12" y="17" width="56" height="53" rx="7"/><path d="M12 33h56M27 7v20M53 7v20"/></svg>
-      <span id="event-date">PROSSIMO\nEVENTO</span>
+      <span id="event-date">PROSSIMO EVENTO</span>
     </div>
     <div class="program-booking">
       <svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="20" r="12"/><path d="M13 69V55c0-13 12-21 27-21s27 8 27 21v14z"/></svg>
-      <span id="booking-info">PRENOTAZIONI APERTE\nIN RECEPTION</span>
+      <span id="booking-info">PRENOTAZIONI APERTE IN RECEPTION</span>
     </div>
 
     <div class="program-table">
       <div class="program-head">
         <span class="c-time">ORARIO</span>
         <span class="c-name">RITUALE</span>
-        <span class="c-last" id="third-title">LOCATION</span>
+        <span class="c-last">LOCATION</span>
       </div>
       <div class="program-body" id="program-rows"></div>
     </div>
@@ -219,244 +212,117 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 </main>
 
 <script>
-(()=>{
-  'use strict';
-  const fallback=[
-    ['10:30','Scrub viso e corpo Frutti Rossi','Bagno Turco'],
-    ['11:30','Maschera viso','Infrared'],
-    ['12:30','Aufguss balsamico','Sauna'],
-    ['13:15','Maschera viso','Infrared'],
-    ['14:00','Maschera viso','Area esterna'],
-    ['15:45','Aufguss balsamico','Sauna'],
-    ['16:30','Maschera viso','Area esterna'],
-    ['17:15','Savonage con sapone nero marocchino','Bagno Turco'],
-    ['18:00','Maschera viso','Infrared'],
-    ['19:15','Aufguss balsamico','Sauna']
-  ].map((r,i)=>({id:'r'+i,time:r[0],name:r[1],area:r[2],duration:10}));
-
-  let data={version:1,standard:fallback,events:[]};
-  const params=new URLSearchParams(location.search);
-  const demo=params.has('demo');
-  if(demo){
-    data.events=['2026-11-27','2026-12-04','2027-01-15','2027-02-12','2027-03-19'].map((date,i)=>({id:'demo'+i,date,program:fallback}));
-  }
-
-  const $=sel=>document.querySelector(sel);
-
-  function parseDate(value){
-    const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value||''));
-    if(!m) return null;
-    const d=new Date(+m[1],+m[2]-1,+m[3],12,0,0,0);
-    return d.getFullYear()===+m[1] && d.getMonth()===(+m[2]-1) && d.getDate()===+m[3] ? d : null;
-  }
-
-  function fmtDate(iso, options){
-    const d=parseDate(iso);
-    return d ? d.toLocaleDateString('it-IT', options) : '';
-  }
-
-  function romeNow(){
-    const parts=new Intl.DateTimeFormat('en-GB',{
-      timeZone:'Europe/Rome', year:'numeric', month:'2-digit', day:'2-digit',
-      hour:'2-digit', minute:'2-digit', hourCycle:'h23'
-    }).formatToParts(new Date());
-    const pick=t=>parts.find(p=>p.type===t)?.value;
-    return {
-      date:`${pick('year')}-${pick('month')}-${pick('day')}`,
-      minutes:(+pick('hour')*60)+(+pick('minute'))
-    };
-  }
-
-  function getEvents(){
-    const now=romeNow().date;
-    return (Array.isArray(data.events)?data.events:[])
-      .filter(e=>parseDate(e.date) && e.date>=now)
-      .sort((a,b)=>String(a.date).localeCompare(String(b.date)));
-  }
-
-  function bookingStart(iso){
-    const d=parseDate(iso);
-    if(!d) return '';
-    d.setDate(d.getDate()-7);
-    return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
-  }
-
-  function esc(v){
-    return String(v??'').replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
-  }
-
-  function formatArea(area){
-    const a=String(area||'').toLowerCase();
-    if(a.includes('turco')) return 'Bagno Turco';
-    if(a.includes('infra')) return 'Infrared';
-    if(a.includes('sauna')) return 'Sauna';
-    if(a.includes('esterna')) return 'Area esterna';
-    return String(area||'');
-  }
-
-  function icon(area){
-    const a=String(area||'').toLowerCase();
-    if(a.includes('turco')) return '<svg viewBox="0 0 60 60"><circle cx="18" cy="16" r="6"/><circle cx="41" cy="14" r="4.5"/><circle cx="20" cy="37" r="4.5"/><circle cx="42" cy="42" r="7"/></svg>';
-    if(a.includes('infra')) return '<svg viewBox="0 0 60 60"><path d="M9 48C8 25 25 10 51 9c-1 26-14 42-40 41"/><path d="M11 51L44 17"/></svg>';
-    if(a.includes('esterna')) return '<svg viewBox="0 0 60 60"><path d="M30 8v44M8 30h44M14 14l32 32M46 14L14 46"/></svg>';
-    return '<svg viewBox="0 0 60 60"><path d="M14 8C2 21 24 27 12 44M30 7C17 22 40 29 27 45M46 8C32 22 54 30 41 45"/><path d="M7 52Q30 60 54 52"/></svg>';
-  }
-
-  function statusFor(row, minutes){
-    const m=/^(\d{1,2}):(\d{2})$/.exec(String(row.time||''));
-    if(!m) return 'IN PROGRAMMA';
-    const start=(+m[1]*60)+(+m[2]);
-    const duration=Number(row.duration)||10;
-    if(minutes < start) return 'IN PROGRAMMA';
-    if(minutes < start + duration) return 'IN CORSO';
-    return 'CONCLUSO';
-  }
-
-  let lastProgramKey='';
-  function renderProgram(force=false){
-    const next=getEvents()[0];
-    const now=romeNow();
-    const key=JSON.stringify([next?.date, now.date, now.minutes, next?.program||data.standard]);
-    if(!force && key===lastProgramKey) return;
-    lastProgramKey=key;
-
-    if(!next){
-      $('#event-date').textContent='PROSSIMO\nEVENTO';
-      $('#booking-info').textContent='DATE IN\nAGGIORNAMENTO';
-      $('#third-title').textContent='LOCATION';
-      $('#program-rows').innerHTML='<div class="empty">Programma in aggiornamento</div>';
-      return;
-    }
-
-    const date=parseDate(next.date);
-    const weekday=fmtDate(next.date,{weekday:'long'}).toUpperCase();
-    const month=fmtDate(next.date,{month:'long'}).toUpperCase();
-    $('#event-date').textContent=`${weekday}\n${date.getDate()} ${month} ${date.getFullYear()}`;
-
-    const openDate=bookingStart(next.date);
-    if(now.date < openDate){
-      $('#booking-info').textContent=`PRENOTAZIONI APERTE\nDAL ${fmtDate(openDate,{day:'numeric',month:'long'}).toUpperCase()}`;
-    } else {
-      $('#booking-info').textContent='PRENOTAZIONI APERTE\nIN RECEPTION';
-    }
-
-    const isEventDay=now.date===next.date;
-    $('#third-title').textContent=isEventDay ? 'STATO' : 'LOCATION';
-
-    const rows=(Array.isArray(next.program)&&next.program.length?next.program:data.standard||fallback)
-      .slice()
-      .sort((a,b)=>String(a.time).localeCompare(String(b.time)));
-
-    $('#program-rows').innerHTML=rows.map(row=>{
-      const area=formatArea(row.area);
-      const status=isEventDay ? statusFor(row, now.minutes) : null;
-      const statusClass=status==='IN CORSO'?'corso':status==='CONCLUSO'?'concluso':'programma';
-      return `
-        <div class="program-row">
-          <div class="p-time">${esc(row.time)}</div>
-          <div class="p-icon ${String(area).toLowerCase()==='sauna'?'hot':''}">${icon(area)}</div>
-          <div class="p-name">${esc(row.name)}</div>
-          <div class="p-last ${isEventDay ? `status ${statusClass}` : ''}">${isEventDay ? esc(status) : esc(area)}</div>
-        </div>`;
-    }).join('');
-  }
-
-  function animateProgramRows(){
-    // L'intestazione e l'intero riquadro restano fermi; entrano solo i 10 elementi.
-    document.querySelectorAll('#program-rows .program-row').forEach((row, idx)=>{
-      row.style.animationDelay=`${0.12 + idx*0.12}s`;
-      row.classList.remove('play');
-      void row.offsetWidth;
-      row.classList.add('play');
-    });
-  }
-
-  function renderCalendar(){
-    const items=getEvents().slice(0,5);
-    if(!items.length){
-      $('#calendar-rows').innerHTML='<div class="empty white">Nuove date in aggiornamento</div>';
-      return;
-    }
-    $('#calendar-rows').innerHTML=items.map(ev=>{
-      const d=parseDate(ev.date);
-      const day=d.getDate();
-      const month=fmtDate(ev.date,{month:'short'}).replace('.','').toUpperCase();
-      const weekday=fmtDate(ev.date,{weekday:'long'}).toUpperCase();
-      const full=fmtDate(ev.date,{day:'numeric',month:'long',year:'numeric'});
-      return `
-        <div class="calendar-row">
-          <div class="calendar-tile">
-            <div class="calendar-day">${day}</div>
-            <div class="calendar-month">${esc(month)}</div>
-          </div>
-          <div class="calendar-text">
-            <div class="calendar-weekday">${esc(weekday)}</div>
-            <div class="calendar-full">${esc(full)}</div>
-          </div>
-        </div>`;
-    }).join('');
-
-    document.querySelectorAll('.calendar-row').forEach((row,idx)=>{
-      row.style.animationDelay = `${0.08 + idx*0.08}s`;
-      row.classList.remove('play');
-      void row.offsetWidth;
-      row.classList.add('play');
-    });
-  }
-
-  async function loadData(){
-    if(demo) return;
-    try{
-      const res=await fetch(`./eventi.json?ts=${Date.now()}`,{cache:'no-store'});
-      if(!res.ok) throw new Error('HTTP '+res.status);
-      const json=await res.json();
-      if(Array.isArray(json.standard)) data.standard=json.standard;
-      if(Array.isArray(json.events)) data.events=json.events;
-    }catch(err){
-      console.warn('Impossibile caricare eventi.json', err);
-    }
-  }
-
-  const slides=[
-    {el:$('#slide-marketing'), ms:10000},
-    {el:$('#slide-program'), ms:15000},
-    {el:$('#slide-calendar'), ms:10000}
-  ];
-  let current=0;
-  let start=Date.now();
-
-  function showSlide(index){
-    current=index;
-    slides.forEach((s,i)=>s.el.classList.toggle('active', i===index));
-    if(index===1){renderProgram(true);animateProgramRows();}
-    if(index===2) renderCalendar();
-  }
-
-  function resizeStage(){
-    const scale=Math.max(window.innerWidth/1920, window.innerHeight/1080);
-    document.documentElement.style.setProperty('--scale', scale);
-  }
-  window.addEventListener('resize', resizeStage);
-  resizeStage();
-
-  loadData().then(()=>{
-    showSlide(0);
-    setInterval(()=>{
-      const now=Date.now();
-      if(now - start >= slides[current].ms){
-        start=now;
-        showSlide((current+1)%slides.length);
-      }else if(current===1){
-        renderProgram();
-      }
-    },1000);
-    setInterval(async()=>{
-      await loadData();
-      lastProgramKey='';
-      if(current===1) renderProgram(true);
-      if(current===2) renderCalendar();
-    },60000);
-  });
+(()=>{'use strict';
+// COLLEGAMENTO GOOGLE SHEETS: inserire SOLO l'ID del documento, non l'URL completo.
+// La scheda "Rituali" deve essere accessibile in sola lettura (Pubblica sul web).
+const CONFIG={sheetId:'',sheetName:'Rituali',refreshMs:60000,slideTimes:[10000,15000,10000]};
+const demo=new URLSearchParams(location.search).has('demo');
+const standardDemo=[
+['10:30','Scrub viso e corpo Frutti Rossi','Bagno Turco',10],
+['11:30','Maschera viso','Infrared',10],
+['12:30','Aufguss balsamico','Sauna',10],
+['13:15','Maschera viso','Infrared',10],
+['14:00','Maschera viso','Area esterna',10],
+['15:45','Aufguss balsamico','Sauna',10],
+['16:30','Maschera viso','Area esterna',10],
+['17:15','Savonage con sapone nero marocchino','Bagno Turco',10],
+['18:00','Maschera viso','Infrared',10],
+['19:15','Aufguss balsamico','Sauna',10]
+].map(([time,name,area,duration],i)=>({id:'r'+i,time,name,area,duration}));
+let DATA={program:demo?standardDemo:[],events:[]};
+const $=s=>document.querySelector(s);
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function localDate(s){const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(String(s||''));if(!m)return null;const d=new Date(+m[1],+m[2]-1,+m[3],12);return (d.getFullYear()===+m[1]&&d.getMonth()===+m[2]-1&&d.getDate()===+m[3])?d:null}
+function iso(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function formatDate(s,opts){const d=localDate(s);return d?d.toLocaleDateString('it-IT',opts):''}
+function nowRome(){const p=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Rome',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());const v=x=>p.find(e=>e.type===x)?.value;return{date:`${v('year')}-${v('month')}-${v('day')}`,minute:+v('hour')*60+(+v('minute'))}}
+function getUpcoming(){const today=nowRome().date;return DATA.events.filter(e=>e.date>=today&&localDate(e.date)).slice().sort((a,b)=>a.date.localeCompare(b.date))}
+function asTime(raw,formatted){let t=String(formatted||raw||'').trim();const m=t.match(/^(\d{1,2}):(\d\d)/);if(m)return `${m[1].padStart(2,'0')}:${m[2]}`;if(typeof raw==='number'&&raw>=0&&raw<1){let n=Math.round(raw*1440);return `${String(Math.floor(n/60)%24).padStart(2,'0')}:${String(n%60).padStart(2,'0')}`}if(/^Date\(/.test(t)){let a=t.match(/Date\([^,]+,[^,]+,[^,]+,(\d+),(\d+)/);if(a)return `${a[1].padStart(2,'0')}:${a[2].padStart(2,'0')}`}return ''}
+function asDate(raw,formatted){
+ const test=[raw,formatted].filter(v=>v!==null&&v!==undefined).map(v=>String(v).trim());
+ for(let s of test){let m=s.match(/^Date\((\d+),(\d+),(\d+)/);if(m)return `${m[1]}-${String(+m[2]+1).padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+ if(/^\d{4}-\d\d-\d\d$/.test(s)&&localDate(s))return s;
+ m=s.match(/^(\d{1,2})[\/.](\d{1,2})[\/.](\d{4})$/);if(m){let v=`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;if(localDate(v))return v}
+ }
+ return null;
+}
+// Google Visualization JSONP evita dipendenze da un database e permette lettura su GitHub Pages.
+// Foglio Rituali: A=orario B=rituale C=location D=durata; F=data evento (G/H opzionali).
+async function readGoogleSheet(){
+ if(!CONFIG.sheetId)return;
+ const callback='ritualiSheet_'+Date.now();
+ await new Promise((resolve,reject)=>{
+   const tag=document.createElement('script');let timer;
+   const clean=()=>{clearTimeout(timer);tag.remove();delete window[callback]};
+   window[callback]=res=>{try{
+     if(!res?.table?.rows)throw Error('Google Sheet non disponibile o non pubblicato');
+     let program=[],events=[];
+     for(const row of res.table.rows){
+       const cs=row.c||[];
+       const value=i=>cs[i]?.v;
+       const form=i=>cs[i]?.f;
+       const time=asTime(value(0),form(0));
+       const name=String(form(1)||value(1)||'').trim();
+       const area=String(form(2)||value(2)||'').trim();
+       const duration=parseInt(form(3)||value(3),10)||10;
+       if(time&&name&&area)program.push({time,name,area,duration});
+       const date=asDate(value(5),form(5));
+       if(date)events.push({date});
+     }
+     if(!program.length&&!events.length)throw Error('Nessun dato valido nella scheda Rituali');
+     DATA={program:program.length?program:DATA.program,events:[...new Map(events.map(x=>[x.date,x])).values()]};
+     clean();resolve();
+   }catch(err){clean();reject(err)}};
+   tag.onerror=()=>{clean();reject(Error('Impossibile leggere Google Sheets'))};
+   timer=setTimeout(()=>{clean();reject(Error('Timeout Google Sheets'))},12000);
+   const tqx=encodeURIComponent(`out:json;responseHandler:${callback}`);
+   tag.src=`https://docs.google.com/spreadsheets/d/${encodeURIComponent(CONFIG.sheetId)}/gviz/tq?tqx=${tqx}&sheet=${encodeURIComponent(CONFIG.sheetName)}&headers=0&_=${Date.now()}`;
+   document.head.appendChild(tag);
+ });
+}
+function bookingFrom(date){let d=localDate(date);if(!d)return '';d.setDate(d.getDate()-7);return iso(d)}
+function icon(area,name){
+ const a=String(area||'').toLowerCase(),n=String(name||'').toLowerCase();
+ if(n.includes('aufguss')||n.includes('sauna')||n.includes('detox'))return '<svg viewBox="0 0 60 60"><path d="M14 8C2 21 24 27 12 44M30 7C17 22 40 29 27 45M46 8C32 22 54 30 41 45"/><path d="M7 52Q30 60 54 52"/></svg>';
+ if(n.includes('scrub')||n.includes('savonage')||a.includes('turco'))return '<svg viewBox="0 0 60 60"><circle cx="18" cy="16" r="6"/><circle cx="41" cy="14" r="4.5"/><circle cx="20" cy="37" r="4.5"/><circle cx="42" cy="42" r="7"/></svg>';
+ if(n.includes('maschera')||n.includes('viso')||a.includes('infra'))return '<svg viewBox="0 0 60 60"><path d="M9 48C8 25 25 10 51 9c-1 26-14 42-40 41"/><path d="M11 51L44 17"/></svg>';
+ return '<svg viewBox="0 0 60 60"><path d="M30 8v44M8 30h44M14 14l32 32M46 14L14 46"/></svg>';
+}
+function calcStatus(row,minutes){const m=String(row.time).match(/^(\d\d):(\d\d)$/);if(!m)return {text:'',cls:''};let start=+m[1]*60+(+m[2]);const duration=Number(row.duration)||10;
+ if(minutes<start){const diff=start-minutes;return{text:`-${String(Math.floor(diff/60)).padStart(2,'0')}:${String(diff%60).padStart(2,'0')}`,cls:''}};
+ if(minutes<start+duration)return{text:'IN CORSO',cls:'running'};
+ return{text:'CONCLUSO',cls:'finished'};
+}
+let lastKey='',currentSlide=0;
+function updateCountdown(rows,isToday,minute){
+ $('#program-rows').querySelectorAll('.p-countdown').forEach((el,i)=>{
+ const status=isToday?calcStatus(rows[i],minute):{text:'',cls:''};
+ el.textContent=status.text;el.className='p-countdown '+status.cls;
+ });
+}
+function renderProgram(force=false){
+ const next=getUpcoming()[0];const now=nowRome();let rows=DATA.program.slice().sort((a,b)=>a.time.localeCompare(b.time));
+ const key=JSON.stringify([next?.date,now.date,rows]);
+ if(!force&&key===lastKey){updateCountdown(rows,next?.date===now.date,now.minute);return}
+ lastKey=key;
+ $('#event-date').textContent=next?`${formatDate(next.date,{weekday:'long'}).toUpperCase()}\n${formatDate(next.date,{day:'numeric',month:'long',year:'numeric'}).toUpperCase()}`:'PROSSIMO\nEVENTO';
+ $('#booking-info').textContent=!next?'CALENDARIO\nIN AGGIORNAMENTO':now.date<bookingFrom(next.date)?`PRENOTAZIONI APERTE\nDAL ${formatDate(bookingFrom(next.date),{day:'numeric',month:'long'}).toUpperCase()}`:'PRENOTAZIONI APERTE\nIN RECEPTION';
+ const today=next?.date===now.date;
+ $('#program-rows').innerHTML=rows.length?rows.map((r,i)=>{const st=today?calcStatus(r,now.minute):{text:'',cls:''};const area=String(r.area||'');
+ return `<div class="program-row play" style="--reveal-delay:${.15+i*.12}s"><span class="p-time">${esc(r.time)}</span><span class="p-icon ${String(r.name).toLowerCase().includes('aufguss')?'hot':''}">${icon(area,r.name)}</span><span class="p-name">${esc(r.name)}</span><span class="p-countdown ${st.cls}">${esc(st.text)}</span><span class="p-last">${esc(area)}</span></div>`}).join(''):'<div class="empty">Programma in aggiornamento</div>';
+}
+function renderCalendar(){const events=getUpcoming().slice(0,5);
+ $('#calendar-rows').innerHTML=events.length?events.map(e=>{let d=localDate(e.date);return `<div class="calendar-row"><div class="calendar-tile"><div class="calendar-day">${d.getDate()}</div><div class="calendar-month">${esc(formatDate(e.date,{month:'short'}).replace('.','').toUpperCase())}</div></div><div class="calendar-text"><div class="calendar-weekday">${esc(formatDate(e.date,{weekday:'long'}).toUpperCase())}</div><div class="calendar-full">${esc(formatDate(e.date,{day:'numeric',month:'long',year:'numeric'}))}</div></div></div>`}).join(''):'<div class="empty white">Nuove date in aggiornamento</div>';
+ $('#calendar-rows').querySelectorAll('.calendar-row').forEach((r,i)=>{r.style.animationDelay=`${.15+i*.15}s`;r.classList.remove('play');void r.offsetWidth;r.classList.add('play')});
+}
+const slides=['#slide-marketing','#slide-program','#slide-calendar'].map(s=>$(s));
+function show(i){currentSlide=i;slides.forEach((s,j)=>s.classList.toggle('active',j===i));if(i===1)renderProgram(true);if(i===2)renderCalendar()}
+function resize(){document.documentElement.style.setProperty('--scale',Math.max(innerWidth/1920,innerHeight/1080))}addEventListener('resize',resize);resize();
+if(demo){const d=localDate(nowRome().date);d.setDate(d.getDate()+7);DATA.events=[0,21,42,63,84].map(x=>{let dd=new Date(d);dd.setDate(dd.getDate()+x);return {date:iso(dd)}})}
+async function updateData(){if(demo)return;try{await readGoogleSheet();if(currentSlide===1)renderProgram(true);if(currentSlide===2)renderCalendar()}catch(err){console.warn(err.message)}}
+updateData();show(0);
+let lastSwitch=Date.now();setInterval(()=>{let time=Date.now();if(time-lastSwitch>=CONFIG.slideTimes[currentSlide]){lastSwitch=time;show((currentSlide+1)%3)}else if(currentSlide===1)renderProgram()},1000);
+setInterval(updateData,CONFIG.refreshMs);
 })();
 </script>
 </body>
