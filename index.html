@@ -135,23 +135,38 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 .calendar-invitation{font:700 22px/1.17 Gotham,Arial,sans-serif;margin:0;color:#fff}
 .calendar-subtitle{font:700 27px/1 Gotham,Arial,sans-serif;letter-spacing:-.5px;white-space:nowrap}
 .calendar-rule,.calendar-rule-secondary{width:505px}
-
-/* === REFINEMENT SLIDE 3: larger left copy, narrower calendar === */
-/* All other slides, scripts and dynamic functionality remain unchanged. */
-#slide-calendar .calendar-left{left:100px;top:100px;width:650px;height:817px}
-#slide-calendar .calendar-title{font-size:66px;line-height:.96;letter-spacing:-1.8px}
-#slide-calendar .calendar-intro{font-size:33px;line-height:1.16;letter-spacing:-.5px}
-#slide-calendar .calendar-description{font-size:27px;line-height:1.27;max-width:615px}
-#slide-calendar .calendar-invitation{font-size:26px;line-height:1.2}
-#slide-calendar .calendar-subtitle{font-size:31px;line-height:1.05}
+/* === SLIDE 3 — REVISIONE GRAFICA 20/11/2026 ===
+   Override mirato: slide 1, slide 2 e script restano invariati. */
+#slide-calendar .calendar-left{
+  left:100px;top:62px;width:665px;height:935px;
+}
+#slide-calendar .calendar-title{
+  font-size:78px;line-height:.96;letter-spacing:-2.1px;
+}
+#slide-calendar .calendar-intro{
+  font-size:39px;line-height:1.14;letter-spacing:-.5px;
+}
+#slide-calendar .calendar-description{
+  font-size:30px;line-height:1.27;max-width:640px;
+}
+#slide-calendar .calendar-invitation{font-size:30px;line-height:1.2}
+#slide-calendar .calendar-subtitle{
+  font-size:33px;line-height:1.05;letter-spacing:-.4px;
+}
 #slide-calendar .calendar-rule,
-#slide-calendar .calendar-rule-secondary{width:575px}
-#slide-calendar .calendar-separator{left:785px}
-#slide-calendar .calendar-panel{left:835px;width:985px}
-#slide-calendar .calendar-row{grid-template-columns:174px minmax(0,1fr);gap:23px}
-#slide-calendar .calendar-tile{width:165px}
+#slide-calendar .calendar-rule-secondary{width:625px}
+#slide-calendar .calendar-separator{left:811px;top:45px;height:970px}
+#slide-calendar .calendar-panel{
+  left:862px;top:65px;width:977px;height:900px;
+  padding:22px 30px 20px;
+}
+#slide-calendar .calendar-row{
+  grid-template-columns:182px minmax(0,1fr);gap:22px;
+}
+#slide-calendar .calendar-tile{width:168px;height:129px}
 #slide-calendar .calendar-weekday{font-size:54px}
 #slide-calendar .calendar-full{font-size:33px}
+
 </style>
 </head>
 <body>
