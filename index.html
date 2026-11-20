@@ -54,6 +54,9 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 .program-row{flex:1;display:grid;grid-template-columns:170px 84px 1fr 300px;align-items:center;padding:0 24px;border-bottom:2px solid rgba(255,255,255,.95);background:#f7ede4;color:#0d0d0d}
 .program-row:nth-child(even){background:#f2e7dc}
 .program-row:last-child{border-bottom:0}
+/* Ogni riga compare nel proprio spazio: nessun movimento della tabella. */
+.program-row.play{animation:ritualReveal .34s ease-out both}
+@keyframes ritualReveal{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
 .p-time{font-size:35px;letter-spacing:-.8px}
 .p-icon{display:flex;align-items:center;justify-content:center}
 .p-icon svg{width:48px;height:48px;fill:none;stroke:#111;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
@@ -83,14 +86,14 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 
 @media (prefers-reduced-motion: reduce){
   .slide{transition:none}
-  .calendar-row.play{animation:none;opacity:1;transform:none}
+  .calendar-row.play,.program-row.play{animation:none;opacity:1;transform:none}
 }
 
 /* === DEFINITIVE STYLES: FOREGROUND UI IS INDEPENDENT OF PHOTOS === */
 #slide-program,#slide-calendar{overflow:hidden}
 .program-left{position:absolute;left:72px;top:104px;width:586px;color:white;text-shadow:0 2px 8px rgba(82,26,4,.13)}
 .program-heading{font:700 84px/.94 Gotham,Arial,sans-serif;letter-spacing:-2.4px}
-.program-subheading{margin-top:38px;font:700 36px/1.14 Arial,sans-serif;letter-spacing:.3px}
+.program-subheading{margin-top:38px;font:700 36px/1.14 Gotham,Arial,sans-serif;letter-spacing:.3px}
 .program-line{width:155px;height:4px;margin-top:38px;background:#fff}
 .program-separator{position:absolute;left:685px;top:106px;width:3px;height:745px;background:rgba(255,255,255,.92)}
 .program-date{left:70px;top:503px;width:582px;height:154px;background:#b80020;border-radius:25px;gap:23px;padding:14px 23px}
@@ -108,11 +111,12 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 .p-name{font-size:26px;letter-spacing:-.65px;line-height:1.06}
 .p-last{width:270px;min-height:47px;font-size:23px}
 #slide-calendar:before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(24,34,41,.44) 0%,rgba(45,48,55,.39) 40%,rgba(34,41,48,.38) 100%);pointer-events:none}
-.calendar-left{position:absolute;left:109px;top:184px;width:555px;color:#fff;text-shadow:0 2px 7px rgba(11,20,25,.2)}
+/* La prima riga e l'ultima riga di testo coincidono con i bordi della tabella. */
+.calendar-left{position:absolute;left:109px;top:102px;width:555px;height:814px;display:flex;flex-direction:column;justify-content:space-between;align-items:stretch;color:#fff;text-align:left;text-shadow:0 2px 7px rgba(11,20,25,.2)}
 .calendar-title{font:700 78px/.98 Gotham,Arial,sans-serif;letter-spacing:-2.2px}
-.calendar-rule{width:505px;height:3px;background:#fff;margin:27px 0 28px}
-.calendar-description{max-width:525px;font:400 30px/1.24 Arial,Helvetica,sans-serif;letter-spacing:.1px;text-align:left;margin:0 0 40px;color:#fff}
-.calendar-rule-secondary{width:505px;height:3px;background:#fff;margin:0 0 29px}
+.calendar-rule{width:505px;height:3px;flex:none;background:#fff;margin:0}
+.calendar-description{max-width:525px;font:700 29px/1.27 Gotham,Arial,sans-serif;letter-spacing:0;text-align:left;margin:0;color:#fff}
+.calendar-rule-secondary{width:505px;height:3px;flex:none;background:#fff;margin:0}
 .calendar-subtitle{font:700 55px/1.08 Gotham,Arial,sans-serif;text-align:left;letter-spacing:-1px}
 .calendar-separator{position:absolute;left:708px;top:94px;width:3px;height:854px;background:rgba(255,255,255,.88)}
 .calendar-panel{left:760px;top:102px;width:1085px;height:814px;border-radius:47px;border:3px solid #f5e0c8;background:rgba(56,60,63,.76);box-shadow:0 13px 38px rgba(20,24,27,.16);padding:19px 31px 18px}
@@ -121,7 +125,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 .calendar-day{font-size:67px}
 .calendar-month{font-size:29px}
 .calendar-weekday{font-size:57px}
-.calendar-full{font-size:38px}
+.calendar-full{font:700 34px/1.07 Gotham,Arial,sans-serif;letter-spacing:-.6px}
 
 </style>
 </head>
@@ -315,6 +319,16 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
     }).join('');
   }
 
+  function animateProgramRows(){
+    // L'intestazione e l'intero riquadro restano fermi; entrano solo i 10 elementi.
+    document.querySelectorAll('#program-rows .program-row').forEach((row, idx)=>{
+      row.style.animationDelay=`${0.12 + idx*0.12}s`;
+      row.classList.remove('play');
+      void row.offsetWidth;
+      row.classList.add('play');
+    });
+  }
+
   function renderCalendar(){
     const items=getEvents().slice(0,5);
     if(!items.length){
@@ -372,7 +386,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
   function showSlide(index){
     current=index;
     slides.forEach((s,i)=>s.el.classList.toggle('active', i===index));
-    if(index===1) renderProgram(true);
+    if(index===1){renderProgram(true);animateProgramRows();}
     if(index===2) renderCalendar();
   }
 
