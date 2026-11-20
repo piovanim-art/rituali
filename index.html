@@ -28,8 +28,8 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 .full-image{width:100%;height:100%;display:block;object-fit:cover}
 
 /* background slides based directly on the approved graphics */
-#slide-program{background:url('assets/slide2-bg-clean.png') center center/100% 100% no-repeat}
-#slide-calendar{background:url('assets/slide3-bg-clean.png') center center/100% 100% no-repeat}
+#slide-program{background:url('assets/sfondo-rituali.png') center center / cover no-repeat}
+#slide-calendar{background:url('assets/sfondo-calendario.png') center center / cover no-repeat}
 
 /* discreet masks only to remove the old logo residue */
 .logo-mask{position:absolute;left:0;bottom:0;pointer-events:none}
@@ -85,6 +85,42 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
   .slide{transition:none}
   .calendar-row.play{animation:none;opacity:1;transform:none}
 }
+
+/* === DEFINITIVE STYLES: FOREGROUND UI IS INDEPENDENT OF PHOTOS === */
+#slide-program,#slide-calendar{overflow:hidden}
+.program-left{position:absolute;left:72px;top:104px;width:586px;color:white;text-shadow:0 2px 8px rgba(82,26,4,.13)}
+.program-heading{font:700 84px/.94 Gotham,Arial,sans-serif;letter-spacing:-2.4px}
+.program-subheading{margin-top:38px;font:700 36px/1.14 Arial,sans-serif;letter-spacing:.3px}
+.program-line{width:155px;height:4px;margin-top:38px;background:#fff}
+.program-separator{position:absolute;left:685px;top:106px;width:3px;height:745px;background:rgba(255,255,255,.92)}
+.program-date{left:70px;top:503px;width:582px;height:154px;background:#b80020;border-radius:25px;gap:23px;padding:14px 23px}
+.program-date svg{height:78px;width:78px;flex-basis:78px}
+#event-date{font:700 42px/1.08 Gotham,Arial,sans-serif;letter-spacing:-1.2px}
+.program-booking{left:70px;top:706px;width:582px;height:127px;border:3px solid #fff;border-radius:23px;background:rgba(140,59,15,.04);gap:20px;padding:12px 23px}
+.program-booking svg{width:74px;height:74px;flex-basis:74px}
+#booking-info{font:700 29px/1.08 Gotham,Arial,sans-serif}
+.program-table{left:730px;top:99px;width:1137px;height:772px;background:#f7eae0;border:2px solid #f5e9dd;border-radius:28px;box-shadow:0 10px 24px rgba(66,20,4,.11)}
+.program-head{height:68px;grid-template-columns:164px 74px minmax(0,1fr) 290px;padding:0 22px;font-size:31px}
+.program-body{height:calc(100% - 68px)}
+.program-row{grid-template-columns:164px 74px minmax(0,1fr) 290px;padding:0 22px}
+.p-time{font-size:33px}
+.p-icon svg{width:45px;height:45px}
+.p-name{font-size:26px;letter-spacing:-.65px;line-height:1.06}
+.p-last{width:270px;min-height:47px;font-size:23px}
+#slide-calendar:before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(24,34,41,.44) 0%,rgba(45,48,55,.39) 40%,rgba(34,41,48,.38) 100%);pointer-events:none}
+.calendar-left{position:absolute;left:109px;top:184px;width:555px;color:#fff;text-shadow:0 2px 7px rgba(11,20,25,.2)}
+.calendar-title{font:700 78px/.98 Gotham,Arial,sans-serif;letter-spacing:-2.2px}
+.calendar-rule{width:505px;height:3px;background:#fff;margin:40px 0 62px}
+.calendar-subtitle{font:700 57px/1.08 Gotham,Arial,sans-serif;text-align:center;letter-spacing:-1px}
+.calendar-separator{position:absolute;left:708px;top:94px;width:3px;height:854px;background:rgba(255,255,255,.88)}
+.calendar-panel{left:760px;top:102px;width:1085px;height:814px;border-radius:47px;border:3px solid #f5e0c8;background:rgba(56,60,63,.76);box-shadow:0 13px 38px rgba(20,24,27,.16);padding:19px 31px 18px}
+.calendar-row{grid-template-columns:187px minmax(0,1fr);gap:26px;padding:0 8px;border-bottom:1px solid rgba(255,255,255,.24)}
+.calendar-tile{width:174px;height:123px;border-radius:25px;background:#f4e4d3}
+.calendar-day{font-size:67px}
+.calendar-month{font-size:29px}
+.calendar-weekday{font-size:57px}
+.calendar-full{font-size:38px}
+
 </style>
 </head>
 <body>
@@ -94,6 +130,12 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
   </section>
 
   <section class="slide" id="slide-program">
+    <div class="program-left">
+      <div class="program-heading">RITUALI<br>BENESSERE</div>
+      <div class="program-subheading">UN VIAGGIO TRA VAPORE<br>E AROMI ESSENZIALI<br>CHE RIGENERANO I SENSI.</div>
+      <div class="program-line"></div>
+    </div>
+    <div class="program-separator"></div>
     <div class="program-date">
       <svg viewBox="0 0 80 80" aria-hidden="true"><rect x="12" y="17" width="56" height="53" rx="7"/><path d="M12 33h56M27 7v20M53 7v20"/></svg>
       <span id="event-date">PROSSIMO\nEVENTO</span>
@@ -111,12 +153,18 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
       </div>
       <div class="program-body" id="program-rows"></div>
     </div>
-    <div class="logo-mask"></div>
+
   </section>
 
   <section class="slide" id="slide-calendar">
+    <div class="calendar-left">
+      <div class="calendar-title">RITUALI<br>BENESSERE</div>
+      <div class="calendar-rule"></div>
+      <div class="calendar-subtitle">PROSSIMI<br>APPUNTAMENTI</div>
+    </div>
+    <div class="calendar-separator"></div>
     <div class="calendar-panel" id="calendar-rows"></div>
-    <div class="logo-mask"></div>
+
   </section>
 </main>
 
@@ -325,7 +373,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
   }
 
   function resizeStage(){
-    const scale=Math.min(window.innerWidth/1920, window.innerHeight/1080);
+    const scale=Math.max(window.innerWidth/1920, window.innerHeight/1080);
     document.documentElement.style.setProperty('--scale', scale);
   }
   window.addEventListener('resize', resizeStage);
