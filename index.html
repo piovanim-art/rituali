@@ -167,27 +167,28 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 #event-tag:not(:empty){display:block}
 #event-tag:not(:empty)+#event-date{font-size:38px}
 
-/* SLIDE 3 — revisione grafica approvata (nessuna modifica alle slide 1 e 2) */
-#slide-calendar .calendar-left{left:150px;top:110px;width:605px;height:735px;justify-content:space-between}
-#slide-calendar .calendar-title{font:700 63px/.96 Gotham,Arial,sans-serif;letter-spacing:-1.8px}
-#slide-calendar .calendar-rule{width:575px;height:3px}
-#slide-calendar .calendar-intro{font:700 29px/1.17 Gotham,Arial,sans-serif;letter-spacing:-.5px}
-#slide-calendar .calendar-description{font:700 26px/1.28 Gotham,Arial,sans-serif;max-width:575px;letter-spacing:-.3px}
-#slide-calendar .calendar-invitation{font:700 27px/1.2 Gotham,Arial,sans-serif;margin:0}
+/* SLIDE 3 — revisione leggibilità VTV: non riguarda le slide 1 e 2 */
+#slide-calendar .calendar-left{left:135px;top:112px;width:665px;height:750px;justify-content:space-between;gap:12px}
+#slide-calendar .calendar-title{font:700 68px/.99 Gotham,Arial,sans-serif;letter-spacing:-1.5px}
+#slide-calendar .calendar-rule{width:625px;height:3px}
+#slide-calendar .calendar-intro{font:700 39px/1.12 Gotham,Arial,sans-serif;letter-spacing:-.7px}
+#slide-calendar .calendar-description{font:700 36px/1.2 Gotham,Arial,sans-serif;max-width:635px;letter-spacing:-.35px;margin:0}
+#slide-calendar .calendar-invitation{font:700 36px/1.18 Gotham,Arial,sans-serif;margin:0}
 #slide-calendar .calendar-rule-secondary{display:none}
-#slide-calendar .calendar-separator{left:854px;top:113px;height:764px;width:3px}
-#slide-calendar .calendar-panel{left:970px;top:113px;width:760px;height:764px;padding:25px 34px 19px;border-radius:43px;border:3px solid rgba(255,244,231,.94);background:rgba(48,50,52,.89);box-shadow:0 12px 32px rgba(0,0,0,.13)}
-#slide-calendar .calendar-subtitle{font:700 35px/1.1 Gotham,Arial,sans-serif;letter-spacing:-.7px;color:#fff;white-space:nowrap;text-align:left;flex:none;padding-bottom:18px;border-bottom:2px solid rgba(255,255,255,.85)}
-#slide-calendar .calendar-dates{display:flex;flex-direction:column;flex:1;min-height:0}
-#slide-calendar .calendar-row{grid-template-columns:125px minmax(0,1fr);gap:27px;padding:0 4px;min-height:0;border-bottom:1px solid rgba(255,255,255,.35)}
+#slide-calendar .calendar-separator{left:845px;top:112px;height:750px;width:3px}
+/* L'altezza del riquadro dipende dal numero effettivo di appuntamenti: niente righe giganti se sono soltanto tre. */
+#slide-calendar .calendar-panel{left:942px;top:50%;transform:translateY(-50%);width:833px;height:auto;min-height:0;padding:27px 32px 24px;border-radius:43px;border:3px solid rgba(255,244,231,.94);background:rgba(48,50,52,.89);box-shadow:0 12px 32px rgba(0,0,0,.13)}
+#slide-calendar .calendar-subtitle{font:700 34px/1.1 Gotham,Arial,sans-serif;letter-spacing:-.5px;color:#fff;white-space:nowrap;text-align:left;flex:none;padding-bottom:17px;border-bottom:2px solid rgba(255,255,255,.85)}
+#slide-calendar .calendar-dates{display:flex;flex-direction:column;flex:none;min-height:0}
+#slide-calendar .calendar-row{flex:none;height:140px;grid-template-columns:125px minmax(0,1fr);gap:25px;padding:0 4px;min-height:0;border-bottom:1px solid rgba(255,255,255,.32)}
 #slide-calendar .calendar-row:last-child{border-bottom:0}
-#slide-calendar .calendar-tile{width:117px;height:96px;border-radius:19px;background:#f5e5d5}
+#slide-calendar .calendar-tile{width:115px;height:93px;border-radius:19px;background:#f5e5d5}
 #slide-calendar .calendar-row:first-child .calendar-tile{border:2px solid #fff;background:#bd0025;color:#fff}
-#slide-calendar .calendar-day{font:700 58px/.95 Gotham,Arial,sans-serif;letter-spacing:-1px}
-#slide-calendar .calendar-month{font:700 24px/1 Gotham,Arial,sans-serif;margin-top:4px}
+#slide-calendar .calendar-day{font:700 57px/.95 Gotham,Arial,sans-serif;letter-spacing:-1px}
+#slide-calendar .calendar-month{font:700 24px/1 Gotham,Arial,sans-serif;margin-top:3px}
 #slide-calendar .calendar-text{min-width:0;gap:7px}
 #slide-calendar .calendar-weekday{font:700 25px/1 Gotham,Arial,sans-serif;letter-spacing:0}
-#slide-calendar .calendar-full{font:700 35px/1.1 Gotham,Arial,sans-serif;letter-spacing:-.9px;text-transform:uppercase;white-space:nowrap}
+#slide-calendar .calendar-full{font:700 36px/1.1 Gotham,Arial,sans-serif;letter-spacing:-.8px;text-transform:uppercase;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -267,10 +268,22 @@ function nowRome(){const p=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Rom
 function getUpcoming(){const today=nowRome().date;return DATA.events.filter(e=>e.date>=today&&localDate(e.date)).slice().sort((a,b)=>a.date.localeCompare(b.date))}
 function asTime(raw,formatted){let t=String(formatted||raw||'').trim();const m=t.match(/^(\d{1,2}):(\d\d)/);if(m)return `${m[1].padStart(2,'0')}:${m[2]}`;if(typeof raw==='number'&&raw>=0&&raw<1){let n=Math.round(raw*1440);return `${String(Math.floor(n/60)%24).padStart(2,'0')}:${String(n%60).padStart(2,'0')}`}if(/^Date\(/.test(t)){let a=t.match(/Date\([^,]+,[^,]+,[^,]+,(\d+),(\d+)/);if(a)return `${a[1].padStart(2,'0')}:${a[2].padStart(2,'0')}`}return ''}
 function asDate(raw,formatted){
- const test=[raw,formatted].filter(v=>v!==null&&v!==undefined).map(v=>String(v).trim());
- for(let s of test){let m=s.match(/^Date\((\d+),(\d+),(\d+)/);if(m)return `${m[1]}-${String(+m[2]+1).padStart(2,'0')}-${m[3].padStart(2,'0')}`;
- if(/^\d{4}-\d\d-\d\d$/.test(s)&&localDate(s))return s;
- m=s.match(/^(\d{1,2})[\/.](\d{1,2})[\/.](\d{4})$/);if(m){let v=`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;if(localDate(v))return v}
+ // Supporta le date Google Sheets sia come Date(anno,mese,giorno), sia come
+ // date formattate in italiano, seriali numerici e date con nome del mese.
+ const values=[raw,formatted].filter(v=>v!==null&&v!==undefined);
+ const months={gennaio:1,gen:1,febbraio:2,feb:2,marzo:3,mar:3,aprile:4,apr:4,maggio:5,mag:5,giugno:6,giu:6,luglio:7,lug:7,agosto:8,ago:8,settembre:9,set:9,ottobre:10,ott:10,novembre:11,nov:11,dicembre:12,dic:12};
+ const build=(y,m,d)=>{const v=`${String(y).padStart(4,'0')}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;return localDate(v)?v:null};
+ for(const value of values){
+   if(typeof value==='number'&&Number.isFinite(value)&&value>30000&&value<100000){const date=new Date(Date.UTC(1899,11,30)+Math.floor(value)*86400000);const v=date.toISOString().slice(0,10);if(localDate(v))return v}
+   const s=String(value).trim();let m;
+   m=s.match(/^Date\(\s*(\d{4})\s*,\s*(\d{1,2})\s*,\s*(\d{1,2})/);
+   if(m){const v=build(+m[1],+m[2]+1,+m[3]);if(v)return v}
+   m=s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})(?:[ T].*)?$/);
+   if(m){const v=build(+m[1],+m[2],+m[3]);if(v)return v}
+   m=s.match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{2}|\d{4})(?:\s.*)?$/);
+   if(m){const y=+m[3]<100?2000+(+m[3]):+m[3];const v=build(y,+m[2],+m[1]);if(v)return v}
+   m=s.toLowerCase().replace(/,/g,' ').match(/^(?:[a-zà-ù]+\s+)?(\d{1,2})\s+([a-zà-ù]+)\.?\s+(\d{4})$/i);
+   if(m&&months[m[2]]){const v=build(+m[3],months[m[2]],+m[1]);if(v)return v}
  }
  return null;
 }
