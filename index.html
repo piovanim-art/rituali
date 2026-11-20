@@ -1,431 +1,360 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rituali Benessere | VTV</title>
+<title>Rituali Benessere | Virgin Active Brescia</title>
+
 <style>
-@font-face{
-  font-family:'Gotham';
-  src:url('./Gotham-Bold.otf') format('opentype');
-  font-weight:700;
-  font-style:normal;
-  font-display:swap;
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #9e8d80;
 }
-:root{
-  --red:#c60024;
-  --red-dark:#ab001f;
-  --cream:#f7ede4;
-  --cream-2:#f2e6da;
-  --border:#b47a41;
-  --brown:#7f3f1c;
+
+#screen {
+  position: absolute;
+  width: 1600px;
+  height: 900px;
+  transform-origin: top left;
+  overflow: hidden;
+  color: white;
+  background:
+    radial-gradient(ellipse at 50% -25%,
+      rgba(255,231,199,.55), transparent 65%),
+    linear-gradient(125deg,
+      #a89789 0%, #89796e 48%, #b5a599 100%);
 }
-*{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;font-family:Gotham,Arial,sans-serif}
-#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center center;overflow:hidden;background:#2b0d01}
-.slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .35s ease, visibility 0s linear .35s}
-.slide.active{opacity:1;visibility:visible;transition:opacity .35s ease}
-.full-image{width:100%;height:100%;display:block;object-fit:cover}
 
-/* background slides based directly on the approved graphics */
-#slide-program{background:url('assets/sfondi-rituali.png') center center / cover no-repeat}
-#slide-calendar{background:url('assets/sfondo-calendario.png') center center / cover no-repeat}
+/* Rivestimento SPA */
+#screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg, transparent 0 184px,
+      rgba(65,47,37,.13) 185px,
+      transparent 187px
+    ),
+    linear-gradient(90deg,
+      transparent 49.9%,
+      rgba(70,50,40,.07) 50%,
+      transparent 50.1%);
+  opacity: .5;
+  pointer-events: none;
+}
 
-/* discreet masks only to remove the old logo residue */
-.logo-mask{position:absolute;left:0;bottom:0;pointer-events:none}
-#slide-program .logo-mask{width:355px;height:175px;background:linear-gradient(140deg,#efcdab 0 18%,#d66f25 28%,#cc6622 58%,#c15e1f 100%);clip-path:polygon(0 28%,34% 28%,62% 0,100% 0,100% 100%,0 100%);opacity:.97}
-#slide-calendar .logo-mask{width:325px;height:190px;background:linear-gradient(140deg,#efc999 0 18%,#b35b21 28%,#7f3c17 58%,#6d3112 100%);clip-path:polygon(0 28%,38% 28%,65% 0,100% 0,100% 100%,0 100%);opacity:.97}
+.glow {
+  position: absolute;
+  top: -300px;
+  left: -80px;
+  width: 1760px;
+  height: 380px;
+  border-radius: 50%;
+  box-shadow: 0 0 85px 30px rgba(255,211,151,.55);
+  border-bottom: 3px solid rgba(255,230,195,.8);
+}
 
-/* PROGRAMMA */
-.program-date{position:absolute;left:68px;top:496px;width:590px;height:160px;border-radius:23px;background:linear-gradient(120deg,var(--red-dark),var(--red));display:flex;align-items:center;gap:26px;padding:18px 28px;color:#fff;box-shadow:0 8px 18px rgba(0,0,0,.12)}
-.program-date svg{width:84px;height:84px;flex:0 0 84px;stroke:#fff;stroke-width:4.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
-#event-date{display:block;white-space:pre-line;font-size:46px;line-height:1.02;letter-spacing:-1px}
+.layout {
+  position: relative;
+  display: grid;
+  grid-template-columns: 710px 1fr;
+  gap: 48px;
+  height: 100%;
+  padding: 45px 64px 45px 85px;
+}
 
-.program-booking{position:absolute;left:67px;top:701px;width:591px;height:132px;border:4px solid #fff;border-radius:24px;background:rgba(255,255,255,.03);display:flex;align-items:center;gap:25px;padding:14px 28px;color:#fff}
-.program-booking svg{width:84px;height:84px;flex:0 0 84px;stroke:#fff;stroke-width:4.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
-#booking-info{display:block;white-space:pre-line;font-size:31px;line-height:1.1;letter-spacing:-.4px}
+/* COLONNA SINISTRA */
+.left {
+  position: relative;
+  padding-right: 46px;
+  border-right: 3px solid rgba(255,255,255,.92);
+  display: flex;
+  flex-direction: column;
+}
 
-.program-table{position:absolute;left:709px;top:74px;width:1110px;height:785px;border-radius:30px;overflow:hidden;background:var(--cream);box-shadow:0 8px 16px rgba(0,0,0,.08)}
-.program-head{height:72px;background:linear-gradient(90deg,var(--red-dark),var(--red));color:#fff;display:grid;grid-template-columns:170px 84px 1fr 300px;align-items:center;padding:0 24px;font-size:34px;letter-spacing:-.6px}
-.program-head .c-time{grid-column:1}
-.program-head .c-name{grid-column:3}
-.program-head .c-last{grid-column:4;text-align:center}
-.program-body{height:calc(100% - 72px);display:flex;flex-direction:column}
-.program-row{flex:1;display:grid;grid-template-columns:170px 84px 1fr 300px;align-items:center;padding:0 24px;border-bottom:2px solid rgba(255,255,255,.95);background:#f7ede4;color:#0d0d0d}
-.program-row:nth-child(even){background:#f2e7dc}
-.program-row:last-child{border-bottom:0}
-/* Ogni riga compare nel proprio spazio: nessun movimento della tabella. */
-.program-row.play{animation:ritualReveal .34s ease-out both}
-@keyframes ritualReveal{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
-.p-time{font-size:35px;letter-spacing:-.8px}
-.p-icon{display:flex;align-items:center;justify-content:center}
-.p-icon svg{width:48px;height:48px;fill:none;stroke:#111;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
-.p-icon.hot svg{stroke:#c11933}
-.p-name{font-size:29px;line-height:1.05;letter-spacing:-.8px;padding-right:8px}
-.p-last{justify-self:center;width:282px;min-height:49px;border-radius:28px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;text-align:center;padding:6px 10px;background:#f5e6d4;color:#1b130d;font-size:23px;line-height:1.05;letter-spacing:-.5px}
-.p-last.status.programma{background:#f5e6d4;color:#5d3826;border-color:#b9824f}
-.p-last.status.corso{background:#b80021;color:#fff;border-color:#b80021}
-.p-last.status.concluso{background:#6d6763;color:#fff;border-color:#6d6763}
+h1 {
+  font-size: 68px;
+  line-height: 1.055;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  margin: 0 0 32px;
+  text-shadow: 0 2px 2px rgba(0,0,0,.12);
+}
+
+.rule {
+  height: 3px;
+  width: 100%;
+  background: rgba(255,255,255,.9);
+  flex-shrink: 0;
+}
+
+h2 {
+  font-size: 38px;
+  line-height: 1.18;
+  margin: 32px 0 24px;
+  font-weight: 800;
+}
+
+.description {
+  font-size: 27px;
+  line-height: 1.28;
+  font-weight: 700;
+  margin: 0;
+}
+
+.welcome {
+  font-size: 29px;
+  font-weight: 700;
+  margin-top: auto;
+  margin-bottom: 30px;
+}
+
+.bottom-title {
+  font-size: 30px;
+  font-weight: 800;
+  margin-top: 28px;
+  white-space: nowrap;
+}
 
 /* CALENDARIO */
-.calendar-panel{position:absolute;left:740px;top:64px;width:1125px;height:848px;border-radius:46px;border:3px solid rgba(245,214,173,.95);background:linear-gradient(90deg,rgba(125,60,25,.92),rgba(145,73,31,.92));padding:20px 34px 18px;display:flex;flex-direction:column;box-shadow:none}
-.calendar-row{flex:1;display:grid;grid-template-columns:210px 1fr;align-items:center;gap:38px;border-bottom:1px solid rgba(226,183,135,.45);padding:0 6px;opacity:0;transform:translateY(-12px)}
-.calendar-row:last-child{border-bottom:0}
-.calendar-row.play{animation:fadeDown .28s ease-out both}
-.calendar-tile{width:198px;height:124px;border-radius:26px;background:#efd5aa;color:#190f09;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
-.calendar-row:first-child .calendar-tile{background:linear-gradient(180deg,var(--red-dark),var(--red));color:#fff;border:3px solid rgba(255,244,227,.95)}
-.calendar-day{font-size:72px;letter-spacing:-1px}
-.calendar-month{font-size:33px;letter-spacing:-.6px;margin-top:2px}
-.calendar-text{display:flex;flex-direction:column;gap:4px}
-.calendar-weekday{font-size:64px;line-height:1;letter-spacing:-1.2px;color:#fff}
-.calendar-full{font-size:41px;line-height:1.05;letter-spacing:-.6px;color:#fff;font-family:Arial,Helvetica,sans-serif}
-@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
-
-.empty{display:flex;align-items:center;justify-content:center;height:100%;text-align:center;padding:24px;color:#3d2618;font-size:34px;line-height:1.1}
-.empty.white{color:#fff}
-
-@media (prefers-reduced-motion: reduce){
-  .slide{transition:none}
-  .calendar-row.play,.program-row.play{animation:none;opacity:1;transform:none}
+.calendar {
+  align-self: center;
+  background: rgba(48,48,48,.88);
+  border: 2px solid #efddc6;
+  border-radius: 42px;
+  padding: 24px 30px;
+  min-height: 744px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-/* === DEFINITIVE STYLES: FOREGROUND UI IS INDEPENDENT OF PHOTOS === */
-#slide-program,#slide-calendar{overflow:hidden}
-.program-left{position:absolute;left:72px;top:104px;width:586px;color:white;text-shadow:0 2px 8px rgba(82,26,4,.13)}
-.program-heading{font:700 84px/.94 Gotham,Arial,sans-serif;letter-spacing:-2.4px}
-.program-subheading{margin-top:38px;font:700 36px/1.14 Gotham,Arial,sans-serif;letter-spacing:.3px}
-.program-line{width:155px;height:4px;margin-top:38px;background:#fff}
-.program-separator{position:absolute;left:685px;top:106px;width:3px;height:745px;background:rgba(255,255,255,.92)}
-.program-date{left:70px;top:503px;width:582px;height:154px;background:#b80020;border-radius:25px;gap:23px;padding:14px 23px}
-.program-date svg{height:78px;width:78px;flex-basis:78px}
-#event-date{font:700 42px/1.08 Gotham,Arial,sans-serif;letter-spacing:-1.2px}
-.program-booking{left:70px;top:706px;width:582px;height:127px;border:3px solid #fff;border-radius:23px;background:rgba(140,59,15,.04);gap:20px;padding:12px 23px}
-.program-booking svg{width:74px;height:74px;flex-basis:74px}
-#booking-info{font:700 29px/1.08 Gotham,Arial,sans-serif}
-.program-table{left:730px;top:99px;width:1137px;height:772px;background:#f7eae0;border:2px solid #f5e9dd;border-radius:28px;box-shadow:0 10px 24px rgba(66,20,4,.11)}
-.program-head{height:68px;grid-template-columns:164px 74px minmax(0,1fr) 290px;padding:0 22px;font-size:31px}
-.program-body{height:calc(100% - 68px)}
-.program-row{grid-template-columns:164px 74px minmax(0,1fr) 290px;padding:0 22px}
-.p-time{font-size:33px}
-.p-icon svg{width:45px;height:45px}
-.p-name{font-size:26px;letter-spacing:-.65px;line-height:1.06}
-.p-last{width:270px;min-height:47px;font-size:23px}
-#slide-calendar:before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(24,34,41,.44) 0%,rgba(45,48,55,.39) 40%,rgba(34,41,48,.38) 100%);pointer-events:none}
-/* La prima riga e l'ultima riga di testo coincidono con i bordi della tabella. */
-.calendar-left{position:absolute;left:109px;top:102px;width:555px;height:814px;display:flex;flex-direction:column;justify-content:space-between;align-items:stretch;color:#fff;text-align:left;text-shadow:0 2px 7px rgba(11,20,25,.2)}
-.calendar-title{font:700 78px/.98 Gotham,Arial,sans-serif;letter-spacing:-2.2px}
-.calendar-rule{width:505px;height:3px;flex:none;background:#fff;margin:0}
-.calendar-description{max-width:525px;font:700 29px/1.27 Gotham,Arial,sans-serif;letter-spacing:0;text-align:left;margin:0;color:#fff}
-.calendar-rule-secondary{width:505px;height:3px;flex:none;background:#fff;margin:0}
-.calendar-subtitle{font:700 55px/1.08 Gotham,Arial,sans-serif;text-align:left;letter-spacing:-1px}
-.calendar-separator{position:absolute;left:708px;top:94px;width:3px;height:854px;background:rgba(255,255,255,.88)}
-.calendar-panel{left:760px;top:102px;width:1085px;height:814px;border-radius:47px;border:3px solid #f5e0c8;background:rgba(56,60,63,.76);box-shadow:0 13px 38px rgba(20,24,27,.16);padding:19px 31px 18px}
-.calendar-row{grid-template-columns:187px minmax(0,1fr);gap:26px;padding:0 8px;border-bottom:1px solid rgba(255,255,255,.24)}
-.calendar-tile{width:174px;height:123px;border-radius:25px;background:#f4e4d3}
-.calendar-day{font-size:67px}
-.calendar-month{font-size:29px}
-.calendar-weekday{font-size:57px}
-.calendar-full{font:700 34px/1.07 Gotham,Arial,sans-serif;letter-spacing:-.6px}
+.event {
+  display: grid;
+  grid-template-columns: 148px 1fr;
+  align-items: center;
+  gap: 30px;
+  min-height: 140px;
+  border-bottom: 1px solid rgba(255,255,255,.18);
+}
 
-/* Titoli e messaggio della terza slide: impostazione fedele al cartello marketing. */
-.calendar-left{top:100px;height:817px;justify-content:space-between}
-.calendar-title{font:700 57px/.94 Gotham,Arial,sans-serif;letter-spacing:-1.7px}
-.calendar-intro{font:700 27px/1.16 Gotham,Arial,sans-serif;letter-spacing:-.55px;color:#fff}
-.calendar-description{font:700 23px/1.25 Gotham,Arial,sans-serif;letter-spacing:-.25px;max-width:510px}
-.calendar-invitation{font:700 22px/1.17 Gotham,Arial,sans-serif;margin:0;color:#fff}
-.calendar-subtitle{font:700 27px/1 Gotham,Arial,sans-serif;letter-spacing:-.5px;white-space:nowrap}
-.calendar-rule,.calendar-rule-secondary{width:505px}
+.event:last-child { border-bottom: 0; }
+
+.date-badge {
+  width: 148px;
+  height: 106px;
+  background: #f5e4d2;
+  color: #1e130e;
+  border-radius: 21px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.event:first-child .date-badge {
+  background: #be0026;
+  color: #fff;
+  border: 2px solid #fff;
+}
+
+.day-number {
+  font-size: 59px;
+  line-height: .98;
+  font-weight: 800;
+}
+
+.month {
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.weekday {
+  font-size: 43px;
+  font-weight: 800;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.full-date {
+  font-size: 27px;
+  font-weight: 700;
+  margin-top: 6px;
+  white-space: nowrap;
+}
+
+.empty {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  padding: 40px;
+}
 </style>
 </head>
+
 <body>
-<main id="stage" aria-label="Rituali Benessere - VTV">
-  <section class="slide active" id="slide-marketing">
-    <img class="full-image" src="cartello.jpg" alt="Cartello marketing ufficiale">
-  </section>
+<div id="screen">
+  <div class="glow"></div>
 
-  <section class="slide" id="slide-program">
-    <div class="program-left">
-      <div class="program-heading">RITUALI<br>BENESSERE</div>
-      <div class="program-subheading">UN VIAGGIO TRA VAPORE<br>E AROMI ESSENZIALI<br>CHE RIGENERANO I SENSI.</div>
-      <div class="program-line"></div>
-    </div>
-    <div class="program-separator"></div>
-    <div class="program-date">
-      <svg viewBox="0 0 80 80" aria-hidden="true"><rect x="12" y="17" width="56" height="53" rx="7"/><path d="M12 33h56M27 7v20M53 7v20"/></svg>
-      <span id="event-date">PROSSIMO\nEVENTO</span>
-    </div>
-    <div class="program-booking">
-      <svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="20" r="12"/><path d="M13 69V55c0-13 12-21 27-21s27 8 27 21v14z"/></svg>
-      <span id="booking-info">PRENOTAZIONI APERTE\nIN RECEPTION</span>
-    </div>
+  <main class="layout">
+    <section class="left">
+      <h1>
+        ALZA LA<br>
+        TEMPERATURA.<br>
+        ABBASSA LO<br>
+        STRESS.
+      </h1>
 
-    <div class="program-table">
-      <div class="program-head">
-        <span class="c-time">ORARIO</span>
-        <span class="c-name">RITUALE</span>
-        <span class="c-last" id="third-title">LOCATION</span>
-      </div>
-      <div class="program-body" id="program-rows"></div>
-    </div>
+      <div class="rule"></div>
 
-  </section>
+      <h2>
+        UN RITUALE DI<br>
+        RIGENERAZIONE PROFONDA
+      </h2>
 
-  <section class="slide" id="slide-calendar">
-    <div class="calendar-left">
-      <div class="calendar-title">ALZA LA<br>TEMPERATURA.<br>ABBASSA LO<br>STRESS.</div>
-      <div class="calendar-rule"></div>
-      <div class="calendar-intro">UN RITUALE DI<br>RIGENERAZIONE PROFONDA</div>
-      <p class="calendar-description">Scopri l’esperienza Aufguss, un viaggio tra vapore e aromi essenziali che rigenerano i sensi.</p>
-      <p class="calendar-invitation">Ti aspettiamo.</p>
-      <div class="calendar-rule-secondary" aria-hidden="true"></div>
-      <div class="calendar-subtitle">PROSSIMI APPUNTAMENTI</div>
-    </div>
-    <div class="calendar-separator"></div>
-    <div class="calendar-panel" id="calendar-rows"></div>
+      <p class="description">
+        Scopri l’esperienza Aufguss, un viaggio tra
+        vapore e aromi essenziali che rigenerano i
+        sensi.
+      </p>
 
-  </section>
-</main>
+      <p class="welcome">Ti aspettiamo.</p>
+      <div class="rule"></div>
+      <div class="bottom-title">PROSSIMI APPUNTAMENTI</div>
+    </section>
+
+    <section class="calendar" id="calendar"
+      aria-label="Calendario prossimi rituali">
+    </section>
+  </main>
+</div>
 
 <script>
-(()=>{
-  'use strict';
-  const fallback=[
-    ['10:30','Scrub viso e corpo Frutti Rossi','Bagno Turco'],
-    ['11:30','Maschera viso','Infrared'],
-    ['12:30','Aufguss balsamico','Sauna'],
-    ['13:15','Maschera viso','Infrared'],
-    ['14:00','Maschera viso','Area esterna'],
-    ['15:45','Aufguss balsamico','Sauna'],
-    ['16:30','Maschera viso','Area esterna'],
-    ['17:15','Savonage con sapone nero marocchino','Bagno Turco'],
-    ['18:00','Maschera viso','Infrared'],
-    ['19:15','Aufguss balsamico','Sauna']
-  ].map((r,i)=>({id:'r'+i,time:r[0],name:r[1],area:r[2],duration:10}));
+/* Date degli eventi: aggiungere qui le future date */
+const events = [
+  "2026-11-27",
+  "2026-12-04",
+  "2027-01-15",
+  "2027-02-12",
+  "2027-03-19"
+];
 
-  let data={version:1,standard:fallback,events:[]};
-  const params=new URLSearchParams(location.search);
-  const demo=params.has('demo');
-  if(demo){
-    data.events=['2026-11-27','2026-12-04','2027-01-15','2027-02-12','2027-03-19'].map((date,i)=>({id:'demo'+i,date,program:fallback}));
+const timezone = "Europe/Rome";
+
+const monthsShort = [
+  "GEN","FEB","MAR","APR","MAG","GIU",
+  "LUG","AGO","SET","OTT","NOV","DIC"
+];
+
+const monthsLong = [
+  "gennaio","febbraio","marzo","aprile",
+  "maggio","giugno","luglio","agosto",
+  "settembre","ottobre","novembre","dicembre"
+];
+
+const weekdays = [
+  "DOMENICA","LUNEDÌ","MARTEDÌ","MERCOLEDÌ",
+  "GIOVEDÌ","VENERDÌ","SABATO"
+];
+
+function italianToday() {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: timezone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(new Date());
+
+  const get = type => parts.find(p => p.type === type).value;
+  return `${get("year")}-${get("month")}-${get("day")}`;
+}
+
+function renderCalendar() {
+  const today = italianToday();
+  const upcoming = [...events]
+    .filter(date => date >= today)
+    .sort()
+    .slice(0, 5);
+
+  const container = document.getElementById("calendar");
+  container.replaceChildren();
+
+  if (upcoming.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = "NUOVI APPUNTAMENTI IN ARRIVO";
+    container.appendChild(empty);
+    return;
   }
 
-  const $=sel=>document.querySelector(sel);
+  for (const dateString of upcoming) {
+    const [year, month, day] = dateString.split("-").map(Number);
 
-  function parseDate(value){
-    const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value||''));
-    if(!m) return null;
-    const d=new Date(+m[1],+m[2]-1,+m[3],12,0,0,0);
-    return d.getFullYear()===+m[1] && d.getMonth()===(+m[2]-1) && d.getDate()===+m[3] ? d : null;
+    // UTC evita spostamenti di giorno dovuti al fuso.
+    const weekdayIndex =
+      new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+
+    const event = document.createElement("div");
+    event.className = "event";
+
+    const badge = document.createElement("div");
+    badge.className = "date-badge";
+
+    const dayNumber = document.createElement("div");
+    dayNumber.className = "day-number";
+    dayNumber.textContent = day;
+
+    const monthLabel = document.createElement("div");
+    monthLabel.className = "month";
+    monthLabel.textContent = monthsShort[month - 1];
+
+    badge.append(dayNumber, monthLabel);
+
+    const info = document.createElement("div");
+
+    const weekday = document.createElement("div");
+    weekday.className = "weekday";
+    weekday.textContent = weekdays[weekdayIndex];
+
+    const fullDate = document.createElement("div");
+    fullDate.className = "full-date";
+    fullDate.textContent =
+      `${day} ${monthsLong[month - 1]} ${year}`;
+
+    info.append(weekday, fullDate);
+    event.append(badge, info);
+    container.appendChild(event);
   }
+}
 
-  function fmtDate(iso, options){
-    const d=parseDate(iso);
-    return d ? d.toLocaleDateString('it-IT', options) : '';
-  }
+/* Adattamento automatico a qualsiasi risoluzione 16:9 */
+function resizeScreen() {
+  const scale = Math.min(
+    window.innerWidth / 1600,
+    window.innerHeight / 900
+  );
 
-  function romeNow(){
-    const parts=new Intl.DateTimeFormat('en-GB',{
-      timeZone:'Europe/Rome', year:'numeric', month:'2-digit', day:'2-digit',
-      hour:'2-digit', minute:'2-digit', hourCycle:'h23'
-    }).formatToParts(new Date());
-    const pick=t=>parts.find(p=>p.type===t)?.value;
-    return {
-      date:`${pick('year')}-${pick('month')}-${pick('day')}`,
-      minutes:(+pick('hour')*60)+(+pick('minute'))
-    };
-  }
+  const screen = document.getElementById("screen");
+  screen.style.transform = `scale(${scale})`;
+  screen.style.left = `${(window.innerWidth - 1600 * scale) / 2}px`;
+  screen.style.top = `${(window.innerHeight - 900 * scale) / 2}px`;
+}
 
-  function getEvents(){
-    const now=romeNow().date;
-    return (Array.isArray(data.events)?data.events:[])
-      .filter(e=>parseDate(e.date) && e.date>=now)
-      .sort((a,b)=>String(a.date).localeCompare(String(b.date)));
-  }
+window.addEventListener("resize", resizeScreen);
 
-  function bookingStart(iso){
-    const d=parseDate(iso);
-    if(!d) return '';
-    d.setDate(d.getDate()-7);
-    return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
-  }
+resizeScreen();
+renderCalendar();
 
-  function esc(v){
-    return String(v??'').replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
-  }
-
-  function formatArea(area){
-    const a=String(area||'').toLowerCase();
-    if(a.includes('turco')) return 'Bagno Turco';
-    if(a.includes('infra')) return 'Infrared';
-    if(a.includes('sauna')) return 'Sauna';
-    if(a.includes('esterna')) return 'Area esterna';
-    return String(area||'');
-  }
-
-  function icon(area){
-    const a=String(area||'').toLowerCase();
-    if(a.includes('turco')) return '<svg viewBox="0 0 60 60"><circle cx="18" cy="16" r="6"/><circle cx="41" cy="14" r="4.5"/><circle cx="20" cy="37" r="4.5"/><circle cx="42" cy="42" r="7"/></svg>';
-    if(a.includes('infra')) return '<svg viewBox="0 0 60 60"><path d="M9 48C8 25 25 10 51 9c-1 26-14 42-40 41"/><path d="M11 51L44 17"/></svg>';
-    if(a.includes('esterna')) return '<svg viewBox="0 0 60 60"><path d="M30 8v44M8 30h44M14 14l32 32M46 14L14 46"/></svg>';
-    return '<svg viewBox="0 0 60 60"><path d="M14 8C2 21 24 27 12 44M30 7C17 22 40 29 27 45M46 8C32 22 54 30 41 45"/><path d="M7 52Q30 60 54 52"/></svg>';
-  }
-
-  function statusFor(row, minutes){
-    const m=/^(\d{1,2}):(\d{2})$/.exec(String(row.time||''));
-    if(!m) return 'IN PROGRAMMA';
-    const start=(+m[1]*60)+(+m[2]);
-    const duration=Number(row.duration)||10;
-    if(minutes < start) return 'IN PROGRAMMA';
-    if(minutes < start + duration) return 'IN CORSO';
-    return 'CONCLUSO';
-  }
-
-  let lastProgramKey='';
-  function renderProgram(force=false){
-    const next=getEvents()[0];
-    const now=romeNow();
-    const key=JSON.stringify([next?.date, now.date, now.minutes, next?.program||data.standard]);
-    if(!force && key===lastProgramKey) return;
-    lastProgramKey=key;
-
-    if(!next){
-      $('#event-date').textContent='PROSSIMO\nEVENTO';
-      $('#booking-info').textContent='DATE IN\nAGGIORNAMENTO';
-      $('#third-title').textContent='LOCATION';
-      $('#program-rows').innerHTML='<div class="empty">Programma in aggiornamento</div>';
-      return;
-    }
-
-    const date=parseDate(next.date);
-    const weekday=fmtDate(next.date,{weekday:'long'}).toUpperCase();
-    const month=fmtDate(next.date,{month:'long'}).toUpperCase();
-    $('#event-date').textContent=`${weekday}\n${date.getDate()} ${month} ${date.getFullYear()}`;
-
-    const openDate=bookingStart(next.date);
-    if(now.date < openDate){
-      $('#booking-info').textContent=`PRENOTAZIONI APERTE\nDAL ${fmtDate(openDate,{day:'numeric',month:'long'}).toUpperCase()}`;
-    } else {
-      $('#booking-info').textContent='PRENOTAZIONI APERTE\nIN RECEPTION';
-    }
-
-    const isEventDay=now.date===next.date;
-    $('#third-title').textContent=isEventDay ? 'STATO' : 'LOCATION';
-
-    const rows=(Array.isArray(next.program)&&next.program.length?next.program:data.standard||fallback)
-      .slice()
-      .sort((a,b)=>String(a.time).localeCompare(String(b.time)));
-
-    $('#program-rows').innerHTML=rows.map(row=>{
-      const area=formatArea(row.area);
-      const status=isEventDay ? statusFor(row, now.minutes) : null;
-      const statusClass=status==='IN CORSO'?'corso':status==='CONCLUSO'?'concluso':'programma';
-      return `
-        <div class="program-row">
-          <div class="p-time">${esc(row.time)}</div>
-          <div class="p-icon ${String(area).toLowerCase()==='sauna'?'hot':''}">${icon(area)}</div>
-          <div class="p-name">${esc(row.name)}</div>
-          <div class="p-last ${isEventDay ? `status ${statusClass}` : ''}">${isEventDay ? esc(status) : esc(area)}</div>
-        </div>`;
-    }).join('');
-  }
-
-  function animateProgramRows(){
-    // L'intestazione e l'intero riquadro restano fermi; entrano solo i 10 elementi.
-    document.querySelectorAll('#program-rows .program-row').forEach((row, idx)=>{
-      row.style.animationDelay=`${0.12 + idx*0.12}s`;
-      row.classList.remove('play');
-      void row.offsetWidth;
-      row.classList.add('play');
-    });
-  }
-
-  function renderCalendar(){
-    const items=getEvents().slice(0,5);
-    if(!items.length){
-      $('#calendar-rows').innerHTML='<div class="empty white">Nuove date in aggiornamento</div>';
-      return;
-    }
-    $('#calendar-rows').innerHTML=items.map(ev=>{
-      const d=parseDate(ev.date);
-      const day=d.getDate();
-      const month=fmtDate(ev.date,{month:'short'}).replace('.','').toUpperCase();
-      const weekday=fmtDate(ev.date,{weekday:'long'}).toUpperCase();
-      const full=fmtDate(ev.date,{day:'numeric',month:'long',year:'numeric'});
-      return `
-        <div class="calendar-row">
-          <div class="calendar-tile">
-            <div class="calendar-day">${day}</div>
-            <div class="calendar-month">${esc(month)}</div>
-          </div>
-          <div class="calendar-text">
-            <div class="calendar-weekday">${esc(weekday)}</div>
-            <div class="calendar-full">${esc(full)}</div>
-          </div>
-        </div>`;
-    }).join('');
-
-    document.querySelectorAll('.calendar-row').forEach((row,idx)=>{
-      row.style.animationDelay = `${0.08 + idx*0.08}s`;
-      row.classList.remove('play');
-      void row.offsetWidth;
-      row.classList.add('play');
-    });
-  }
-
-  async function loadData(){
-    if(demo) return;
-    try{
-      const res=await fetch(`./eventi.json?ts=${Date.now()}`,{cache:'no-store'});
-      if(!res.ok) throw new Error('HTTP '+res.status);
-      const json=await res.json();
-      if(Array.isArray(json.standard)) data.standard=json.standard;
-      if(Array.isArray(json.events)) data.events=json.events;
-    }catch(err){
-      console.warn('Impossibile caricare eventi.json', err);
-    }
-  }
-
-  const slides=[
-    {el:$('#slide-marketing'), ms:10000},
-    {el:$('#slide-program'), ms:15000},
-    {el:$('#slide-calendar'), ms:10000}
-  ];
-  let current=0;
-  let start=Date.now();
-
-  function showSlide(index){
-    current=index;
-    slides.forEach((s,i)=>s.el.classList.toggle('active', i===index));
-    if(index===1){renderProgram(true);animateProgramRows();}
-    if(index===2) renderCalendar();
-  }
-
-  function resizeStage(){
-    const scale=Math.max(window.innerWidth/1920, window.innerHeight/1080);
-    document.documentElement.style.setProperty('--scale', scale);
-  }
-  window.addEventListener('resize', resizeStage);
-  resizeStage();
-
-  loadData().then(()=>{
-    showSlide(0);
-    setInterval(()=>{
-      const now=Date.now();
-      if(now - start >= slides[current].ms){
-        start=now;
-        showSlide((current+1)%slides.length);
-      }else if(current===1){
-        renderProgram();
-      }
-    },1000);
-    setInterval(async()=>{
-      await loadData();
-      lastProgramKey='';
-      if(current===1) renderProgram(true);
-      if(current===2) renderCalendar();
-    },60000);
-  });
-})();
+// Aggiornamento anche senza ricaricare la pagina.
+setInterval(renderCalendar, 60000);
 </script>
 </body>
 </html>
