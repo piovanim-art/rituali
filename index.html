@@ -1,168 +1,102 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Rai News 24 Live - Virgin Active</title>
-
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rituali Benessere | VTV</title>
 <style>
-
-html,
-body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    overflow: hidden;
-}
-
-/* =====================================================
-   PAGINA ORARIO VIRGIN ACTIVE
-   ===================================================== */
-
-#clockPage {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    margin: 0;
-    padding: 0;
-    background: #000;
-    z-index: 20;
-}
-
-
-/* =====================================================
-   RAI NEWS 24
-   ===================================================== */
-
-#raiPage {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    margin: 0;
-    padding: 0;
-    background: #000;
-    z-index: 10;
-}
-
+@font-face{font-family:Gotham;src:url('./Gotham-Bold.otf') format('opentype');font-style:normal;font-weight:700;font-display:swap}
+:root{--wine:#ae001d;--cream:#ffefe0;--white:#fff;--dark:#40200e}
+*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#201006;font-family:Arial,Helvetica,sans-serif}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;overflow:hidden;transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center center;background:#481f0a}
+.slide{position:absolute;inset:0;visibility:hidden;opacity:0;transition:opacity .45s ease,visibility 0s .45s;overflow:hidden}.slide.active{visibility:visible;opacity:1;transition:opacity .45s ease,visibility 0s}
+#poster{display:block;width:100%;height:100%;object-fit:contain;background:#1e0b04}
+.wood{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(90deg,transparent 0,rgba(60,18,0,.12) 43%,rgba(32,10,0,.15) 100%),repeating-linear-gradient(0deg,transparent 0,transparent 87px,rgba(30,10,0,.24) 89px,rgba(246,182,112,.17) 92px,transparent 95px),linear-gradient(105deg,#c96921 0%,#a54e16 49%,#b75b19 100%);}
+.wood:before{content:'';position:absolute;inset:0;background:url('assets/legno-chiaro.jpg') repeat-y center top / 100% 220px;mix-blend-mode:soft-light;opacity:.4}
+.wood:after{content:'';position:absolute;right:-4%;bottom:-8%;width:50%;height:22%;transform:skewY(-9deg);background:repeating-linear-gradient(90deg,#8b370d 0 18px,#df8a3a 22px 110px,#4f1a00 115px 121px);opacity:.48;box-shadow:0 -15px 45px #5b290955}
+.wood.dark{background-image:radial-gradient(ellipse at 25% 30%,#854419aa,transparent 65%),linear-gradient(90deg,rgba(24,9,0,.45),rgba(39,12,0,.2)),repeating-linear-gradient(0deg,transparent 0,transparent 145px,#30120470 147px,#ac5a2866 150px,transparent 155px),linear-gradient(105deg,#7c350e,#45200e 73%,#623012)}
+.wood.dark:before{background-image:url('assets/legno-scuro.jpg');opacity:.26}
+.wood.dark:after{opacity:.26}
+.left{position:absolute;left:69px;top:107px;width:590px;color:white;z-index:2}.head{font:700 80px/0.98 Gotham,Arial,sans-serif;letter-spacing:-1.5px;margin:0;text-transform:uppercase}.subtitle{font:400 39px/1.13 Arial,sans-serif;margin-top:37px;letter-spacing:.2px}.shortline{width:148px;height:4px;background:#fff;margin-top:37px}.vert{position:absolute;z-index:2;left:698px;top:99px;height:740px;width:3px;background:#fff9}
+.eventdate{position:absolute;left:0;top:422px;width:593px;height:153px;border-radius:21px;background:linear-gradient(105deg,#ab0020,#c80021);display:flex;align-items:center;gap:30px;padding:20px 34px;box-shadow:0 5px 12px #4b14051c}.eventdate svg{width:77px;height:77px;flex-shrink:0}.eventdate strong{font:700 49px/1.04 Gotham,Arial;white-space:pre-line;text-transform:uppercase}
+.book{position:absolute;left:0;top:619px;width:594px;height:129px;border:3px solid white;border-radius:23px;display:flex;gap:25px;align-items:center;padding:15px 28px}.book svg{width:79px;height:79px;flex-shrink:0}.book span{font:700 34px/1.15 Gotham,Arial;white-space:pre-line}
+.tablearea{position:absolute;left:730px;top:101px;width:1130px;height:742px;z-index:2;background:#fff1e7;border:2px solid #fef1e6;border-radius:25px;overflow:hidden;box-shadow:0 14px 30px #34140938;display:flex;flex-direction:column}
+.tableheading{height:67px;flex:none;background:linear-gradient(90deg,#a6001d,#bb001b);color:white;display:grid;grid-template-columns:187px 1fr 310px;align-items:center;padding:0 25px;font:700 34px Gotham,Arial}
+.tableheading span:nth-child(2){padding-left:54px}.tableheading span:nth-child(3){text-align:center}
+.rows{height:675px;display:flex;flex-direction:column}.ritual-row{display:grid;grid-template-columns:187px 1fr 310px;align-items:center;min-height:0;flex:1;border-bottom:2px solid #fff;background:#faefe6;color:#101010;padding:0 23px}.ritual-row:nth-child(even){background:#f9ebdf}.ritual-row:last-child{border-bottom:0}
+.time{font:700 35px Gotham,Arial}.ritual-main{display:flex;gap:28px;align-items:center;min-width:0}.icon-rit{font:700 43px Arial;width:65px;color:#b70022;text-align:center;flex-shrink:0}.name{font:700 29px/1.07 Gotham,Arial;letter-spacing:-.7px;overflow-wrap:anywhere}.loctag{border-radius:35px;border:2px solid #a66c32;color:#22150a;background:#f9e3cb;font:700 26px Gotham,Arial;text-align:center;padding:12px 4px;max-width:305px}.statetag{color:#fff;font:700 22px Gotham,Arial;display:block;text-align:center;border-radius:31px;padding:14px 5px;background:#258635}.statetag.current{background:#af0622}.statetag.ended{background:#6b6a69}
+.calleft{position:absolute;left:145px;top:174px;width:540px;color:#fff;z-index:2}.calleft .head{font-size:77px;line-height:.96}.calleft .shortline{height:2px;width:510px;margin-top:39px;opacity:.85}.calleft .cal-sub{font:700 54px/1.13 Gotham,Arial;margin:58px 0 0;text-align:center}.calendar-wrap{position:absolute;z-index:2;right:58px;top:100px;width:1111px;height:828px;border:3px solid #f1d2a8;border-radius:47px;background:linear-gradient(120deg,#613014e8,#8b431ee6);padding:20px 31px;box-shadow:0 10px 50px #12070033}
+.calendar-row{position:relative;display:grid;grid-template-columns:208px 1fr;gap:42px;align-items:center;height:20%;padding:0 17px;border-bottom:1px solid #dfb38699;opacity:0;transform:translateY(-14px)}.calendar-row:last-child{border-bottom:0}.calendar-row.play{animation:reveal .35s ease both}.calendar-row .tile{width:207px;height:134px;background:#f8d9ad;color:#24130b;border-radius:30px;display:grid;align-content:center;justify-items:center;line-height:1}.calendar-row:first-child .tile{background:#b50025;color:#fff;border:3px solid #ffe9d3}.tile .num{font:700 74px Gotham,Arial}.tile .month{font:700 38px Gotham,Arial}.calendar-row .weekday{font:700 60px Gotham,Arial;color:#fff;line-height:1.03}.calendar-row .datefull{font:400 39px Arial,sans-serif;color:#fff;line-height:1.16;margin-top:2px}
+@keyframes reveal{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
+.notice{position:absolute;right:45px;top:34px;color:#fff9;font:700 28px Gotham,Arial}
+.empty{display:flex;align-items:center;justify-content:center;color:#5c3520;height:100%;font:700 32px Gotham,Arial;text-align:center;padding:40px}
+#debug{position:absolute;z-index:12;bottom:6px;right:8px;opacity:0;font-size:12px;color:white}
+@media(prefers-reduced-motion:reduce){.slide,.slide.active{transition:none}.calendar-row.play{animation:none;opacity:1;transform:none}}
 </style>
 </head>
-
-
 <body>
-
-
-<!-- ===================================================
-     ORARIO VIRGIN ACTIVE
-     
-     Rimane davanti durante il caricamento
-     di Rai News 24.
-     =================================================== -->
-
-<iframe
-    id="clockPage"
-    src="https://piovanim-art.github.io/oraribrescia/"
-    frameborder="0"
-    scrolling="no">
-</iframe>
-
-
-<!-- ===================================================
-     RAI NEWS 24 LIVE
-     
-     La pagina viene caricata immediatamente
-     sotto l'orario.
-     =================================================== -->
-
-<iframe
-    id="raiPage"
-    src="https://www.rainews.it/dirette/diretta-rainews24"
-    allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-    allowfullscreen
-    frameborder="0"
-    scrolling="no">
-</iframe>
-
-
+<div id="stage">
+  <section class="slide active" id="s-marketing"><img id="poster" src="cartello.jpg" alt="Cartello marketing originale"></section>
+  <section class="slide" id="s-rituali">
+    <div class="wood"></div><div class="vert"></div>
+    <div class="left"><h1 class="head">RITUALI<br>BENESSERE</h1><div class="subtitle">UN VIAGGIO TRA VAPORE<br>E AROMI ESSENZIALI<br>CHE RIGENERANO I SENSI.</div><div class="shortline"></div>
+      <div class="eventdate"><svg viewBox="0 0 80 80" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"><rect x="12" y="17" width="56" height="54" rx="7"/><path d="M12 33H68M27 7V26M53 7V26"/></svg><strong id="event-date">PROSSIMO<br>EVENTO</strong></div>
+      <div class="book"><svg viewBox="0 0 80 80" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"><circle cx="40" cy="19" r="13"/><path d="M13 69V54c0-14 13-21 27-21s27 7 27 21v15z"/></svg><span id="booking-info">PRENOTAZIONI<br>IN RECEPTION</span></div>
+    </div>
+    <div class="tablearea"><div class="tableheading"><span>ORARIO</span><span>RITUALE</span><span id="third-label">LOCATION</span></div><div id="ritual-rows" class="rows"><div class="empty">Calendario in aggiornamento</div></div></div>
+  </section>
+  <section class="slide" id="s-calendario">
+    <div class="wood dark"></div><div class="vert" style="left:704px;height:832px;top:100px"></div>
+    <div class="calleft"><h1 class="head">RITUALI<br>BENESSERE</h1><div class="shortline"></div><div class="cal-sub">PROSSIMI<br>APPUNTAMENTI</div></div>
+    <div class="calendar-wrap" id="calendar-rows"><div class="empty" style="color:#fff">Date in aggiornamento</div></div>
+  </section>
+</div>
 <script>
-
-/*
-========================================================
-VIRGIN ACTIVE
-RAI NEWS 24 LIVE
-========================================================
-
-FUNZIONAMENTO:
-
-1. Parte subito l'orario Virgin Active.
-2. Rai News 24 viene caricata contemporaneamente
-   in background.
-3. L'orario rimane visibile per 15 secondi.
-4. Dopo 15 secondi l'orario viene nascosto.
-5. Rimane visibile Rai News 24.
-========================================================
-*/
-
-
-/* =====================================================
-   TIMER ORARIO
-   =====================================================
-
-   15 secondi
-   ===================================================== */
-
-setTimeout(function () {
-
-    const clock = document.getElementById("clockPage");
-
-    if (clock) {
-        clock.style.display = "none";
-    }
-
-}, 15000);
-
-
-/* =====================================================
-   REFRESH AUTOMATICO
-   =====================================================
-
-   Ogni 6 ore.
-   Serve per mantenere fresca la sessione.
-   ===================================================== */
-
-setTimeout(function () {
-
-    location.reload();
-
-}, 6 * 60 * 60 * 1000);
-
-
-/* =====================================================
-   GESTIONE ERRORI
-   =====================================================
-
-   Se la pagina principale genera un errore,
-   prova a ricaricare dopo 10 secondi.
-   ===================================================== */
-
-window.addEventListener("error", function () {
-
-    setTimeout(function () {
-
-        location.reload();
-
-    }, 10000);
-
-});
-
+(() => {
+'use strict';
+const standard=[
+ ['10:30','Scrub viso e corpo Frutti Rossi','Bagno Turco'],
+ ['11:30','Maschera viso','Infrared'],
+ ['12:30','Aufguss balsamico','Sauna'],
+ ['13:15','Maschera viso','Infrared'],
+ ['14:00','Maschera viso','Area esterna'],
+ ['15:45','Aufguss balsamico','Sauna'],
+ ['16:30','Maschera viso','Area esterna'],
+ ['17:15','Savonage con sapone nero marocchino','Bagno Turco'],
+ ['18:00','Maschera viso','Infrared'],
+ ['19:15','Aufguss balsamico','Sauna']
+].map((a,i)=>({id:'r'+i,time:a[0],name:a[1],area:a[2],duration:10}));
+let data={events:[],standard};
+const demo=new URLSearchParams(location.search).has('demo');
+if(demo){const dates=['2026-11-27','2026-12-04','2027-01-15','2027-02-12','2027-03-19'];data.events=dates.map((date,i)=>({id:'demo'+i,date,program:standard}));}
+const $=s=>document.querySelector(s);
+function parseDate(date){let [y,m,d]=String(date).split('-').map(Number);const result=new Date(y,m-1,d,12);return result.getFullYear()===y&&result.getMonth()===m-1&&result.getDate()===d?result:null}
+function italianDate(date,opts){return parseDate(date)?.toLocaleDateString('it-IT',opts)||''}
+function todayKey(){const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Rome',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const get=k=>parts.find(x=>x.type===k)?.value;return `${get('year')}-${get('month')}-${get('day')}`}
+function romeHHMM(){return new Intl.DateTimeFormat('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date())}
+function minusDays(s,days){let d=parseDate(s);if(!d)return '';d.setDate(d.getDate()-days);return d.toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}).toUpperCase()}
+function escaped(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function icons(area){const a=String(area).toLowerCase();return a.includes('turco')?'◌':a.includes('infra')?'♨':a.includes('sauna')?'♧':'✧'}
+function events(){const t=todayKey();return (data.events||[]).filter(e=>parseDate(e.date)&&e.date>=t).sort((a,b)=>a.date.localeCompare(b.date));}
+function getRitualStatus(ritual){const t=romeHHMM();const [hh,mm]=String(ritual.time).split(':').map(Number);const start=hh*60+mm;const end=start+(Number(ritual.duration)||10);const [nowH,nowM]=t.split(':').map(Number);const current=nowH*60+nowM;return current<start?'IN PROGRAMMA':current<end?'IN CORSO':'CONCLUSO';}
+function renderProgram(){const next=events()[0];const els=$('#ritual-rows');if(!next){$('#event-date').textContent='PROSSIMO\nEVENTO';$('#booking-info').textContent='DATE IN\nAGGIORNAMENTO';$('#third-label').textContent='LOCATION';els.innerHTML='<div class="empty">Calendario in aggiornamento</div>';return;}
+ $('#event-date').textContent=italianDate(next.date,{weekday:'long',day:'numeric',month:'long',year:'numeric'}).replace(/^(\S+)\s/,'$1\n').toUpperCase();
+ let t=todayKey();const release=parseDate(next.date);release.setDate(release.getDate()-7);const opens=`${release.getFullYear()}-${String(release.getMonth()+1).padStart(2,'0')}-${String(release.getDate()).padStart(2,'0')}`;
+ $('#booking-info').textContent=t<opens?`PRENOTAZIONI APERTE\nDAL ${minusDays(next.date,7)}`:'PRENOTAZIONI APERTE\nIN RECEPTION';
+ const today=t===next.date;$('#third-label').textContent=today?'STATO':'LOCATION';const program=Array.isArray(next.program)?next.program:(data.standard||standard);
+ if(!program.length){els.innerHTML='<div class="empty">Programma in aggiornamento</div>';return;}
+ const sorted=program.slice().sort((a,b)=>String(a.time).localeCompare(String(b.time)));
+ els.innerHTML=sorted.map(r=>{const status=today?getRitualStatus(r):null;const cls=status==='IN CORSO'?'current':status==='CONCLUSO'?'ended':'';return `<div class="ritual-row"><div class="time">${escaped(r.time||'')}</div><div class="ritual-main"><div class="icon-rit">${icons(r.area)}</div><div class="name">${escaped(r.name||'')}</div></div><div>${today?`<span class="statetag ${cls}">${status}</span>`:`<div class="loctag">${escaped(r.area||'')}</div>`}</div></div>`;}).join('');
+ }
+function renderCalendar(){const list=events().slice(0,5);const wrap=$('#calendar-rows');if(!list.length){wrap.innerHTML='<div class="empty" style="color:white">Date in aggiornamento</div>';return;}
+ wrap.innerHTML=list.map(e=>{const d=parseDate(e.date);return `<div class="calendar-row"><div class="tile"><span class="num">${d.getDate()}</span><span class="month">${italianDate(e.date,{month:'short'}).replace('.','').toUpperCase()}</span></div><div><div class="weekday">${italianDate(e.date,{weekday:'long'}).toUpperCase()}</div><div class="datefull">${italianDate(e.date,{day:'numeric',month:'long',year:'numeric'})}</div></div></div>`;}).join('');
+}
+const slides=[{el:$('#s-marketing'),ms:10000},{el:$('#s-rituali'),ms:15000},{el:$('#s-calendario'),ms:10000}];let index=0;let last=Date.now();let lastClock='';function display(i){slides.forEach((s,j)=>s.el.classList.toggle('active',j===i));if(i===1)renderProgram();if(i===2){renderCalendar();$('#calendar-rows').querySelectorAll('.calendar-row').forEach((r,j)=>{r.classList.remove('play');r.style.animationDelay=`${.2+j*.2}s`;void r.offsetWidth;r.classList.add('play');});}}
+function tick(){const now=Date.now();if(now-last>=slides[index].ms){index=(index+1)%slides.length;last=now;display(index);}if(slides[index].el.id==='s-rituali'){const clock=todayKey()+' '+romeHHMM();if(lastClock!==clock){lastClock=clock;renderProgram();}}}
+async function load(){if(demo)return;try{const res=await fetch('eventi.json?t='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('HTTP '+res.status);const obj=await res.json();if(Array.isArray(obj.events)&&Array.isArray(obj.standard)){data=obj;}}catch(err){console.warn('Calendario non pubblicato:',err.message);} }
+function resize(){const scale=Math.min(innerWidth/1920,innerHeight/1080);document.documentElement.style.setProperty('--scale',scale);}
+window.addEventListener('resize',resize);resize();
+load().then(()=>{display(0);setInterval(tick,1000);setInterval(async()=>{await load();if(index===1)renderProgram();},60000)});
+})();
 </script>
-
-
 </body>
 </html>
