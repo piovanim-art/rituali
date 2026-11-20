@@ -166,6 +166,28 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 #event-tag{display:none;color:#fff;font:700 21px/1.25 Gotham,Arial,sans-serif;letter-spacing:.3px;margin-bottom:5px}
 #event-tag:not(:empty){display:block}
 #event-tag:not(:empty)+#event-date{font-size:38px}
+
+/* SLIDE 3 — revisione grafica approvata (nessuna modifica alle slide 1 e 2) */
+#slide-calendar .calendar-left{left:150px;top:110px;width:605px;height:735px;justify-content:space-between}
+#slide-calendar .calendar-title{font:700 63px/.96 Gotham,Arial,sans-serif;letter-spacing:-1.8px}
+#slide-calendar .calendar-rule{width:575px;height:3px}
+#slide-calendar .calendar-intro{font:700 29px/1.17 Gotham,Arial,sans-serif;letter-spacing:-.5px}
+#slide-calendar .calendar-description{font:700 26px/1.28 Gotham,Arial,sans-serif;max-width:575px;letter-spacing:-.3px}
+#slide-calendar .calendar-invitation{font:700 27px/1.2 Gotham,Arial,sans-serif;margin:0}
+#slide-calendar .calendar-rule-secondary{display:none}
+#slide-calendar .calendar-separator{left:854px;top:113px;height:764px;width:3px}
+#slide-calendar .calendar-panel{left:970px;top:113px;width:760px;height:764px;padding:25px 34px 19px;border-radius:43px;border:3px solid rgba(255,244,231,.94);background:rgba(48,50,52,.89);box-shadow:0 12px 32px rgba(0,0,0,.13)}
+#slide-calendar .calendar-subtitle{font:700 35px/1.1 Gotham,Arial,sans-serif;letter-spacing:-.7px;color:#fff;white-space:nowrap;text-align:left;flex:none;padding-bottom:18px;border-bottom:2px solid rgba(255,255,255,.85)}
+#slide-calendar .calendar-dates{display:flex;flex-direction:column;flex:1;min-height:0}
+#slide-calendar .calendar-row{grid-template-columns:125px minmax(0,1fr);gap:27px;padding:0 4px;min-height:0;border-bottom:1px solid rgba(255,255,255,.35)}
+#slide-calendar .calendar-row:last-child{border-bottom:0}
+#slide-calendar .calendar-tile{width:117px;height:96px;border-radius:19px;background:#f5e5d5}
+#slide-calendar .calendar-row:first-child .calendar-tile{border:2px solid #fff;background:#bd0025;color:#fff}
+#slide-calendar .calendar-day{font:700 58px/.95 Gotham,Arial,sans-serif;letter-spacing:-1px}
+#slide-calendar .calendar-month{font:700 24px/1 Gotham,Arial,sans-serif;margin-top:4px}
+#slide-calendar .calendar-text{min-width:0;gap:7px}
+#slide-calendar .calendar-weekday{font:700 25px/1 Gotham,Arial,sans-serif;letter-spacing:0}
+#slide-calendar .calendar-full{font:700 35px/1.1 Gotham,Arial,sans-serif;letter-spacing:-.9px;text-transform:uppercase;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -208,11 +230,10 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
       <div class="calendar-intro">UN RITUALE DI<br>RIGENERAZIONE PROFONDA</div>
       <p class="calendar-description">Scopri l’esperienza Aufguss, un viaggio tra vapore e aromi essenziali che rigenerano i sensi.</p>
       <p class="calendar-invitation">Ti aspettiamo.</p>
-      <div class="calendar-rule-secondary" aria-hidden="true"></div>
-      <div class="calendar-subtitle">PROSSIMI APPUNTAMENTI</div>
+
     </div>
     <div class="calendar-separator"></div>
-    <div class="calendar-panel" id="calendar-rows"></div>
+    <div class="calendar-panel"><div class="calendar-subtitle">PROSSIMI APPUNTAMENTI</div><div class="calendar-dates" id="calendar-rows"></div></div>
 
   </section>
 </main>
@@ -319,7 +340,7 @@ function renderProgram(force=false){
  $('#program-rows').innerHTML=rows.length?rows.map((r,i)=>{const st=today?calcStatus(r,now.minute):{text:'',cls:''};const area=String(r.area||'');
  return `<div class="program-row play" style="--reveal-delay:${.15+i*.12}s"><span class="p-time">${esc(r.time)}</span><span class="p-icon ${String(r.name).toLowerCase().includes('aufguss')?'hot':''}">${icon(area,r.name)}</span><span class="p-name">${esc(r.name)}</span><span class="p-countdown ${st.cls}">${esc(st.text)}</span><span class="p-last">${esc(area)}</span></div>`}).join(''):'<div class="empty">Programma in aggiornamento</div>';
 }
-function renderCalendar(){const events=getUpcoming().slice(0,5);
+function renderCalendar(){const today=nowRome().date;const events=DATA.events.filter(e=>e.date>today&&localDate(e.date)).slice().sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);
  $('#calendar-rows').innerHTML=events.length?events.map(e=>{let d=localDate(e.date);return `<div class="calendar-row"><div class="calendar-tile"><div class="calendar-day">${d.getDate()}</div><div class="calendar-month">${esc(formatDate(e.date,{month:'short'}).replace('.','').toUpperCase())}</div></div><div class="calendar-text"><div class="calendar-weekday">${esc(formatDate(e.date,{weekday:'long'}).toUpperCase())}</div><div class="calendar-full">${esc(formatDate(e.date,{day:'numeric',month:'long',year:'numeric'}))}</div></div></div>`}).join(''):'<div class="empty white">Nuove date in aggiornamento</div>';
  $('#calendar-rows').querySelectorAll('.calendar-row').forEach((r,i)=>{r.style.animationDelay=`${.15+i*.15}s`;r.classList.remove('play');void r.offsetWidth;r.classList.add('play')});
 }
