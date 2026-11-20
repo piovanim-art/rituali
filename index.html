@@ -26,6 +26,21 @@
 .time{font:700 35px Gotham,Arial}.ritual-main{display:flex;gap:28px;align-items:center;min-width:0}.icon-rit{font:700 43px Arial;width:65px;color:#b70022;text-align:center;flex-shrink:0}.name{font:700 29px/1.07 Gotham,Arial;letter-spacing:-.7px;overflow-wrap:anywhere}.loctag{border-radius:35px;border:2px solid #a66c32;color:#22150a;background:#f9e3cb;font:700 26px Gotham,Arial;text-align:center;padding:12px 4px;max-width:305px}.statetag{color:#fff;font:700 22px Gotham,Arial;display:block;text-align:center;border-radius:31px;padding:14px 5px;background:#258635}.statetag.current{background:#af0622}.statetag.ended{background:#6b6a69}
 .calleft{position:absolute;left:145px;top:174px;width:540px;color:#fff;z-index:2}.calleft .head{font-size:77px;line-height:.96}.calleft .shortline{height:2px;width:510px;margin-top:39px;opacity:.85}.calleft .cal-sub{font:700 54px/1.13 Gotham,Arial;margin:58px 0 0;text-align:center}.calendar-wrap{position:absolute;z-index:2;right:58px;top:100px;width:1111px;height:828px;border:3px solid #f1d2a8;border-radius:47px;background:linear-gradient(120deg,#613014e8,#8b431ee6);padding:20px 31px;box-shadow:0 10px 50px #12070033}
 .calendar-row{position:relative;display:grid;grid-template-columns:208px 1fr;gap:42px;align-items:center;height:20%;padding:0 17px;border-bottom:1px solid #dfb38699;opacity:0;transform:translateY(-14px)}.calendar-row:last-child{border-bottom:0}.calendar-row.play{animation:reveal .35s ease both}.calendar-row .tile{width:207px;height:134px;background:#f8d9ad;color:#24130b;border-radius:30px;display:grid;align-content:center;justify-items:center;line-height:1}.calendar-row:first-child .tile{background:#b50025;color:#fff;border:3px solid #ffe9d3}.tile .num{font:700 74px Gotham,Arial}.tile .month{font:700 38px Gotham,Arial}.calendar-row .weekday{font:700 60px Gotham,Arial;color:#fff;line-height:1.03}.calendar-row .datefull{font:400 39px Arial,sans-serif;color:#fff;line-height:1.16;margin-top:2px}
+/* Calendario: grafica approvata, come sfondo pieno. La sola colonna delle date e dinamica. */
+#s-calendario{background:#44200d url('assets/riferimento-calendario.png') center center / 100% 100% no-repeat}
+#s-calendario .wood.dark,#s-calendario>.vert,#s-calendario .calleft{display:none}
+/* Ricostruzione opaca dell'interno del pannello, sulle stesse coordinate dell'originale:
+   impedisce che le date dell'immagine sottostante restino visibili. */
+#s-calendario .calendar-wrap{
+  left:742px;right:auto;top:99px;width:1100px;height:835px;
+  border:3px solid #f3d0a8;border-radius:52px;
+  background:linear-gradient(115deg,#673014 0%,#81401c 55%,#82401b 100%);
+  box-shadow:none;padding:20px 31px;overflow:hidden;
+}
+#s-calendario .calendar-row{grid-template-columns:211px minmax(0,1fr);gap:40px;padding:0 18px;border-bottom:1px solid #d4a779a0}
+#s-calendario .calendar-row .tile{width:211px;height:135px;border-radius:27px}
+#s-calendario .calendar-row .weekday{font-size:59px}
+#s-calendario .calendar-row .datefull{font-size:39px}
 @keyframes reveal{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
 .notice{position:absolute;right:45px;top:34px;color:#fff9;font:700 28px Gotham,Arial}
 .empty{display:flex;align-items:center;justify-content:center;color:#5c3520;height:100%;font:700 32px Gotham,Arial;text-align:center;padding:40px}
@@ -93,7 +108,7 @@ function renderCalendar(){const list=events().slice(0,5);const wrap=$('#calendar
 const slides=[{el:$('#s-marketing'),ms:10000},{el:$('#s-rituali'),ms:15000},{el:$('#s-calendario'),ms:10000}];let index=0;let last=Date.now();let lastClock='';function display(i){slides.forEach((s,j)=>s.el.classList.toggle('active',j===i));if(i===1)renderProgram();if(i===2){renderCalendar();$('#calendar-rows').querySelectorAll('.calendar-row').forEach((r,j)=>{r.classList.remove('play');r.style.animationDelay=`${.2+j*.2}s`;void r.offsetWidth;r.classList.add('play');});}}
 function tick(){const now=Date.now();if(now-last>=slides[index].ms){index=(index+1)%slides.length;last=now;display(index);}if(slides[index].el.id==='s-rituali'){const clock=todayKey()+' '+romeHHMM();if(lastClock!==clock){lastClock=clock;renderProgram();}}}
 async function load(){if(demo)return;try{const res=await fetch('eventi.json?t='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('HTTP '+res.status);const obj=await res.json();if(Array.isArray(obj.events)&&Array.isArray(obj.standard)){data=obj;}}catch(err){console.warn('Calendario non pubblicato:',err.message);} }
-function resize(){const scale=Math.min(innerWidth/1920,innerHeight/1080);document.documentElement.style.setProperty('--scale',scale);}
+function resize(){const scale=Math.max(innerWidth/1920,innerHeight/1080);document.documentElement.style.setProperty('--scale',scale);}
 window.addEventListener('resize',resize);resize();
 load().then(()=>{display(0);setInterval(tick,1000);setInterval(async()=>{await load();if(index===1)renderProgram();},60000)});
 })();
