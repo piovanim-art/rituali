@@ -160,6 +160,12 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 .calendar-description,.calendar-full,.calendar-invitation{font-family:Gotham,Arial,sans-serif !important}
 @media(prefers-reduced-motion:reduce){.program-row.play .p-time,.program-row.play .p-icon,.program-row.play .p-name,.program-row.play .p-countdown,.program-row.play .p-last{animation:none}}
 
+/* Data invariata, con etichetta supplementare solamente nel giorno dell’evento */
+.date-stack{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:left;min-width:0;flex:1}
+#event-date{display:block;text-align:left !important;align-self:flex-start;width:100%}
+#event-tag{display:none;color:#fff;font:700 21px/1.25 Gotham,Arial,sans-serif;letter-spacing:.3px;margin-bottom:5px}
+#event-tag:not(:empty){display:block}
+#event-tag:not(:empty)+#event-date{font-size:38px}
 </style>
 </head>
 <body>
@@ -177,7 +183,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
     <div class="program-separator"></div>
     <div class="program-date">
       <svg viewBox="0 0 80 80" aria-hidden="true"><rect x="12" y="17" width="56" height="53" rx="7"/><path d="M12 33h56M27 7v20M53 7v20"/></svg>
-      <span id="event-date">PROSSIMO EVENTO</span>
+      <div class="date-stack"><span id="event-tag" aria-live="polite"></span><span id="event-date">PROSSIMO EVENTO</span></div>
     </div>
     <div class="program-booking">
       <svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="20" r="12"/><path d="M13 69V55c0-13 12-21 27-21s27 8 27 21v14z"/></svg>
@@ -188,7 +194,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
       <div class="program-head">
         <span class="c-time">ORARIO</span>
         <span class="c-name">RITUALE</span>
-        <span class="c-last">LOCATION</span>
+        <span class="c-last" aria-hidden="true"></span>
       </div>
       <div class="program-body" id="program-rows"></div>
     </div>
@@ -309,6 +315,7 @@ function renderProgram(force=false){
  $('#event-date').textContent=next?`${formatDate(next.date,{weekday:'long'}).toUpperCase()}\n${formatDate(next.date,{day:'numeric',month:'long',year:'numeric'}).toUpperCase()}`:'PROSSIMO\nEVENTO';
  $('#booking-info').textContent=!next?'CALENDARIO\nIN AGGIORNAMENTO':now.date<bookingFrom(next.date)?`PRENOTAZIONI APERTE\nDAL ${formatDate(bookingFrom(next.date),{day:'numeric',month:'long'}).toUpperCase()}`:'PRENOTAZIONI APERTE\nIN RECEPTION';
  const today=next?.date===now.date;
+ if(today){$('#event-tag').textContent='';$('#event-date').textContent='IN PROGRAMMA\nOGGI';}else{$('#event-tag').textContent='';}
  $('#program-rows').innerHTML=rows.length?rows.map((r,i)=>{const st=today?calcStatus(r,now.minute):{text:'',cls:''};const area=String(r.area||'');
  return `<div class="program-row play" style="--reveal-delay:${.15+i*.12}s"><span class="p-time">${esc(r.time)}</span><span class="p-icon ${String(r.name).toLowerCase().includes('aufguss')?'hot':''}">${icon(area,r.name)}</span><span class="p-name">${esc(r.name)}</span><span class="p-countdown ${st.cls}">${esc(st.text)}</span><span class="p-last">${esc(area)}</span></div>`}).join(''):'<div class="empty">Programma in aggiornamento</div>';
 }
