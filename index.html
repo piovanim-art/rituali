@@ -60,7 +60,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 .p-time{font-size:35px;letter-spacing:-.8px}
 .p-icon{display:flex;align-items:center;justify-content:center}
 .p-icon svg{width:48px;height:48px;fill:none;stroke:#111;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
-.p-icon.hot svg{stroke:#c11933}
+.p-icon.hot svg{stroke:#111}
 .p-name{font-size:29px;line-height:1.05;letter-spacing:-.8px;padding-right:8px}
 .p-last{justify-self:center;width:282px;min-height:49px;border-radius:28px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;text-align:center;padding:6px 10px;background:#f5e6d4;color:#1b130d;font-size:23px;line-height:1.05;letter-spacing:-.5px}
 .p-last.status.programma{background:#f5e6d4;color:#5d3826;border-color:#b9824f}
@@ -324,10 +324,17 @@ async function readGoogleSheet(){
 function bookingFrom(date){let d=localDate(date);if(!d)return '';d.setDate(d.getDate()-7);return iso(d)}
 function icon(area,name){
  const a=String(area||'').toLowerCase(),n=String(name||'').toLowerCase();
- if(n.includes('aufguss')||n.includes('sauna')||n.includes('detox'))return '<svg viewBox="0 0 60 60"><path d="M14 8C2 21 24 27 12 44M30 7C17 22 40 29 27 45M46 8C32 22 54 30 41 45"/><path d="M7 52Q30 60 54 52"/></svg>';
- if(n.includes('scrub')||n.includes('savonage')||a.includes('turco'))return '<svg viewBox="0 0 60 60"><circle cx="18" cy="16" r="6"/><circle cx="41" cy="14" r="4.5"/><circle cx="20" cy="37" r="4.5"/><circle cx="42" cy="42" r="7"/></svg>';
- if(n.includes('maschera')||n.includes('viso')||a.includes('infra'))return '<svg viewBox="0 0 60 60"><path d="M9 48C8 25 25 10 51 9c-1 26-14 42-40 41"/><path d="M11 51L44 17"/></svg>';
- return '<svg viewBox="0 0 60 60"><path d="M30 8v44M8 30h44M14 14l32 32M46 14L14 46"/></svg>';
+ // Simboli monocromatici approvati: Scrub (granelli), Maschera (goccia e onde),
+ // Aufguss (vapore e gocce), Savonage (tre bollicine).
+ const svg=(body)=>`<svg viewBox="0 0 60 60" aria-hidden="true" focusable="false">${body}</svg>`;
+ if(n.includes('scrub'))return svg('<g fill="#111" stroke="none"><circle cx="30" cy="8" r="2.2"/><circle cx="20" cy="18" r="2.2"/><circle cx="39" cy="18" r="2.2"/><circle cx="11" cy="29" r="2.3"/><circle cx="27" cy="27" r="2.6"/><circle cx="47" cy="29" r="2.2"/><circle cx="18" cy="39" r="2.3"/><circle cx="37" cy="38" r="2.5"/><circle cx="7" cy="48" r="2"/><circle cx="30" cy="49" r="2.4"/><circle cx="52" cy="49" r="2"/></g>');
+ if(n.includes('maschera')||n.includes('viso'))return svg('<path d="M30 7C25 16 18 23 18 32a12 12 0 0 0 24 0c0-9-7-16-12-25Z"/><path d="M11 44c8 9 30 9 38 0M6 51c12 11 36 11 48 0"/>');
+ if(n.includes('aufguss')||n.includes('sauna')||n.includes('detox'))return svg('<path d="M14 5C6 15 21 20 14 29M30 3c-10 13 9 17 0 29M46 5c-8 10 7 15 0 24"/><path d="M14 39c-3 4-5 7-5 9a5 5 0 0 0 10 0c0-2-2-5-5-9ZM30 35c-3 5-6 9-6 12a6 6 0 0 0 12 0c0-3-3-7-6-12ZM46 39c-3 4-5 7-5 9a5 5 0 0 0 10 0c0-2-2-5-5-9Z"/>');
+ if(n.includes('savonage')||n.includes('sapone'))return svg('<circle cx="23" cy="36" r="17"/><circle cx="46" cy="37" r="8"/><circle cx="43" cy="13" r="6"/><path d="M13 30c1-5 5-8 9-9M41 35l3-2M40 11l2-1"/>');
+ // Ripiego sulle location solo per rituali senza una categoria nel nome.
+ if(a.includes('infra'))return svg('<path d="M30 7C25 16 18 23 18 32a12 12 0 0 0 24 0c0-9-7-16-12-25Z"/><path d="M11 44c8 9 30 9 38 0M6 51c12 11 36 11 48 0"/>');
+ if(a.includes('sauna'))return svg('<path d="M14 6C5 18 23 25 14 39M30 5C18 20 42 26 30 41M46 6C36 20 53 26 45 39"/>');
+ return svg('<circle cx="30" cy="30" r="17"/><path d="M30 18v24M18 30h24"/>');
 }
 function calcStatus(row,minutes){const m=String(row.time).match(/^(\d\d):(\d\d)$/);if(!m)return {text:'',cls:''};let start=+m[1]*60+(+m[2]);const duration=Number(row.duration)||10;
  if(minutes<start){const diff=start-minutes;const h=Math.floor(diff/60),m=diff%60;return{text:h?`TRA ${h} H${m?' '+m+' MIN':''}`:`TRA ${m} MIN`,cls:''}};
