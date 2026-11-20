@@ -110,8 +110,10 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 #slide-calendar:before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(24,34,41,.44) 0%,rgba(45,48,55,.39) 40%,rgba(34,41,48,.38) 100%);pointer-events:none}
 .calendar-left{position:absolute;left:109px;top:184px;width:555px;color:#fff;text-shadow:0 2px 7px rgba(11,20,25,.2)}
 .calendar-title{font:700 78px/.98 Gotham,Arial,sans-serif;letter-spacing:-2.2px}
-.calendar-rule{width:505px;height:3px;background:#fff;margin:40px 0 62px}
-.calendar-subtitle{font:700 57px/1.08 Gotham,Arial,sans-serif;text-align:center;letter-spacing:-1px}
+.calendar-rule{width:505px;height:3px;background:#fff;margin:27px 0 28px}
+.calendar-description{max-width:525px;font:400 30px/1.24 Arial,Helvetica,sans-serif;letter-spacing:.1px;text-align:left;margin:0 0 40px;color:#fff}
+.calendar-rule-secondary{width:505px;height:3px;background:#fff;margin:0 0 29px}
+.calendar-subtitle{font:700 55px/1.08 Gotham,Arial,sans-serif;text-align:left;letter-spacing:-1px}
 .calendar-separator{position:absolute;left:708px;top:94px;width:3px;height:854px;background:rgba(255,255,255,.88)}
 .calendar-panel{left:760px;top:102px;width:1085px;height:814px;border-radius:47px;border:3px solid #f5e0c8;background:rgba(56,60,63,.76);box-shadow:0 13px 38px rgba(20,24,27,.16);padding:19px 31px 18px}
 .calendar-row{grid-template-columns:187px minmax(0,1fr);gap:26px;padding:0 8px;border-bottom:1px solid rgba(255,255,255,.24)}
@@ -160,6 +162,8 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
     <div class="calendar-left">
       <div class="calendar-title">RITUALI<br>BENESSERE</div>
       <div class="calendar-rule"></div>
+      <p class="calendar-description">Scopri l’esperienza Aufguss, un viaggio tra vapore e aromi essenziali che rigenerano i sensi.</p>
+      <div class="calendar-rule-secondary" aria-hidden="true"></div>
       <div class="calendar-subtitle">PROSSIMI<br>APPUNTAMENTI</div>
     </div>
     <div class="calendar-separator"></div>
