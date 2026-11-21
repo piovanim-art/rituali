@@ -190,6 +190,8 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 #slide-calendar .calendar-weekday{font:700 25px/1 Gotham,Arial,sans-serif;letter-spacing:0}
 #slide-calendar .calendar-full{font:700 36px/1.1 Gotham,Arial,sans-serif;letter-spacing:-.8px;text-transform:uppercase;white-space:nowrap}
 
+/* Preavviso discreto: cambia solo lo sfondo nei 10 minuti precedenti. */
+.program-row.a-breve, .program-row.a-breve:nth-child(even){background:#DEC0A5}
 /* Gotham ufficiale: tre pesi caricati dalla directory principale di GitHub Pages. */
 @font-face{font-family:Gotham;src:url('./Gotham-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:Gotham;src:url('./Gotham-Black.otf') format('opentype');font-weight:900;font-style:normal;font-display:swap}
@@ -391,16 +393,23 @@ function icon(area,name){
  if(a.includes('sauna'))return svg('<path d="M14 6C5 18 23 25 14 39M30 5C18 20 42 26 30 41M46 6C36 20 53 26 45 39"/>');
  return svg('<circle cx="30" cy="30" r="17"/><path d="M30 18v24M18 30h24"/>');
 }
-function calcStatus(row,minutes){const m=String(row.time).match(/^(\d\d):(\d\d)$/);if(!m)return {text:'',cls:''};let start=+m[1]*60+(+m[2]);const duration=Number(row.duration)||10;
- if(minutes<start){const diff=start-minutes;const h=Math.floor(diff/60),m=diff%60;return{text:h?`TRA ${h} H${m?' '+m+' MIN':''}`:`TRA ${m} MIN`,cls:''}};
- if(minutes<start+duration)return{text:'IN CORSO',cls:'running'};
- return{text:'CONCLUSO',cls:'finished'};
+function calcStatus(row,minutes){
+ const m=String(row.time).match(/^(\d\d):(\d\d)$/);
+ if(!m)return {text:'',cls:''};
+ const start=+m[1]*60+(+m[2]);
+ const duration=Number(row.duration)||10;
+ if(minutes<start){
+   return start-minutes<=10?{text:'A BREVE',cls:'soon'}:{text:'',cls:''};
+ }
+ if(minutes<start+duration)return {text:'IN CORSO',cls:'running'};
+ return {text:'CONCLUSO',cls:'finished'};
 }
 let lastKey='',currentSlide=0;
 function updateCountdown(rows,isToday,minute){
  $('#program-rows').querySelectorAll('.p-countdown').forEach((el,i)=>{
  const status=isToday?calcStatus(rows[i],minute):{text:'',cls:''};
  el.textContent=status.text;el.className='p-countdown '+status.cls;
+ el.closest('.program-row')?.classList.toggle('a-breve',status.cls==='soon');
  });
 }
 function renderProgram(force=false){
@@ -413,7 +422,7 @@ function renderProgram(force=false){
  const today=next?.date===now.date;
  if(today){$('#event-tag').textContent='';$('#event-date').textContent='IN PROGRAMMA\nOGGI';}else{$('#event-tag').textContent='';}
  $('#program-rows').innerHTML=rows.length?rows.map((r,i)=>{const st=today?calcStatus(r,now.minute):{text:'',cls:''};const area=String(r.area||'');
- return `<div class="program-row play" style="--reveal-delay:${.15+i*.12}s"><span class="p-time">${esc(r.time)}</span><span class="p-icon ${String(r.name).toLowerCase().includes('aufguss')?'hot':''}">${icon(area,r.name)}</span><span class="p-name">${esc(r.name)}</span><span class="p-countdown ${st.cls}">${esc(st.text)}</span><span class="p-last">${esc(area)}</span></div>`}).join(''):'<div class="empty">Programma in aggiornamento</div>';
+ return `<div class="program-row play ${st.cls==='soon'?'a-breve':''}" style="--reveal-delay:${.15+i*.12}s"><span class="p-time">${esc(r.time)}</span><span class="p-icon ${String(r.name).toLowerCase().includes('aufguss')?'hot':''}">${icon(area,r.name)}</span><span class="p-name">${esc(r.name)}</span><span class="p-countdown ${st.cls}">${esc(st.text)}</span><span class="p-last">${esc(area)}</span></div>`}).join(''):'<div class="empty">Programma in aggiornamento</div>';
 }
 function renderCalendar(){const today=nowRome().date;const events=DATA.events.filter(e=>e.date>today&&localDate(e.date)).slice().sort((a,b)=>a.date.localeCompare(b.date)).slice(0,4);
  $('#calendar-rows').innerHTML=events.length?events.map(e=>{let d=localDate(e.date);return `<div class="calendar-row"><div class="calendar-tile"><div class="calendar-day">${d.getDate()}</div><div class="calendar-month">${esc(formatDate(e.date,{month:'short'}).replace('.','').toUpperCase())}</div></div><div class="calendar-text"><div class="calendar-weekday">${esc(formatDate(e.date,{weekday:'long'}).toUpperCase())}</div><div class="calendar-full">${esc(formatDate(e.date,{day:'numeric',month:'long',year:'numeric'}))}</div></div></div>`}).join(''):'<div class="empty white">Nuove date in aggiornamento</div>';
