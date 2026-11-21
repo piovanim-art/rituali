@@ -190,6 +190,9 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 #slide-calendar .calendar-weekday{font:700 25px/1 Gotham,Arial,sans-serif;letter-spacing:0}
 #slide-calendar .calendar-full{font:700 36px/1.1 Gotham,Arial,sans-serif;letter-spacing:-.8px;text-transform:uppercase;white-space:nowrap}
 
+/* Slide 2 senza intestazione: le righe occupano tutto il pannello. */
+.program-body{height:100%}
+
 /* Preavviso discreto: cambia solo lo sfondo nei 10 minuti precedenti. */
 .program-row.a-breve, .program-row.a-breve:nth-child(even){background:#DEC0A5}
 /* Gotham ufficiale: tre pesi caricati dalla directory principale di GitHub Pages. */
@@ -224,11 +227,6 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
     </div>
 
     <div class="program-table">
-      <div class="program-head">
-        <span class="c-time">ORARIO</span>
-        <span class="c-name">RITUALE</span>
-        <span class="c-last" aria-hidden="true"></span>
-      </div>
       <div class="program-body" id="program-rows"></div>
     </div>
 
