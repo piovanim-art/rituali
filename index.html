@@ -202,6 +202,58 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 .program-subheading,.program-head,.p-name,.p-countdown,#booking-info,#event-date,#event-tag,.calendar-intro,#slide-calendar .calendar-subtitle,.calendar-weekday{font-weight:700}
 .p-time,.p-last,.calendar-description,.calendar-invitation,.calendar-full,.calendar-day,.calendar-month{font-weight:400}
 #slide-calendar .calendar-description,#slide-calendar .calendar-invitation,#slide-calendar .calendar-full,#slide-calendar .calendar-day,#slide-calendar .calendar-month{font-weight:400}
+
+/* SLIDE 2 — versione minimalista approvata: sfondo totalmente trasparente. */
+#slide-program .program-table{
+  background:transparent !important;border:0 !important;box-shadow:none !important;
+  overflow:visible;
+}
+#slide-program .program-body{height:100%}
+#slide-program .program-row,
+#slide-program .program-row:nth-child(even),
+#slide-program .program-row.a-breve{
+  background:transparent !important;color:white !important;
+  border:0 !important;border-radius:21px;
+  /* Più respiro per simboli e descrizioni; stato rimosso. */
+  grid-template-columns:125px 78px minmax(0,1fr) 180px !important;
+  padding-left:17px !important;padding-right:17px !important;
+  box-shadow:inset 0 0 0 0 rgba(255,255,255,0);
+  transition:box-shadow .3s ease;
+}
+/* Una sola cornice bianca: rituale in corso oppure il prossimo in programma. */
+#slide-program .program-row.is-highlighted{
+  box-shadow:inset 0 0 0 3px #fff;
+}
+#slide-program .p-time{font:400 31px/1.1 Gotham,Arial,sans-serif !important;color:#fff}
+#slide-program .p-icon{justify-content:center}
+#slide-program .p-icon svg,
+#slide-program .p-icon.hot svg{width:43px !important;height:43px !important;stroke:white !important}
+#slide-program .p-name{font:700 27px/1.08 Gotham,Arial,sans-serif !important;color:white;letter-spacing:-.55px !important;min-width:0}
+#slide-program .p-last{
+  width:180px !important;min-height:0 !important;
+  border:0 !important;border-radius:0 !important;background:transparent !important;
+  padding:0 !important;color:#fff !important;
+  font:400 24px/1.1 Gotham,Arial,sans-serif !important;
+  letter-spacing:0 !important;text-align:right;justify-self:end;justify-content:flex-end;
+}
+/* Respirazione discreta dell'icona soltanto durante la durata del rituale. */
+@keyframes ritualIconBreath{
+  0%,100%{transform:scale(1);opacity:1}
+  50%{transform:scale(1.13);opacity:.78}
+}
+#slide-program .program-row.is-running .p-icon svg{
+  transform-origin:center center;
+  animation:ritualIconBreath 2.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion:reduce){
+  #slide-program .program-row.is-running .p-icon svg{animation:none}
+}
+/* Data e prenotazioni senza riempimento, come nell'anteprima. */
+#slide-program .program-date{
+  background:transparent !important;border:3px solid white !important;
+  box-shadow:none !important;
+}
+#slide-program .program-booking{background:transparent !important}
 </style>
 </head>
 <body>
@@ -391,36 +443,44 @@ function icon(area,name){
  if(a.includes('sauna'))return svg('<path d="M14 6C5 18 23 25 14 39M30 5C18 20 42 26 30 41M46 6C36 20 53 26 45 39"/>');
  return svg('<circle cx="30" cy="30" r="17"/><path d="M30 18v24M18 30h24"/>');
 }
-function calcStatus(row,minutes){
- const m=String(row.time).match(/^(\d\d):(\d\d)$/);
- if(!m)return {text:'',cls:''};
- const start=+m[1]*60+(+m[2]);
- const duration=Number(row.duration)||10;
- if(minutes<start){
-   return start-minutes<=10?{text:'A BREVE',cls:'soon'}:{text:'',cls:''};
+// Seleziona il rituale da evidenziare: prima quello in corso, altrimenti il prossimo.
+// I minuti e le durate arrivano dal Google Sheet (colonne A e D).
+function ritualMinutes(row){
+ const match=String(row.time).match(/^(\d\d):(\d\d)$/);
+ return match?Number(match[1])*60+Number(match[2]):null;
+}
+function activeRitual(rows,minute){
+ for(let i=0;i<rows.length;i++){
+   const start=ritualMinutes(rows[i]);
+   if(start===null)continue;
+   const duration=Number(rows[i].duration)||10;
+   if(minute>=start&&minute<start+duration)return {index:i,running:true};
+   if(minute<start)return {index:i,running:false};
  }
- if(minutes<start+duration)return {text:'IN CORSO',cls:'running'};
- return {text:'CONCLUSO',cls:'finished'};
+ return {index:-1,running:false};
 }
 let lastKey='',currentSlide=0;
-function updateCountdown(rows,isToday,minute){
- $('#program-rows').querySelectorAll('.p-countdown').forEach((el,i)=>{
- const status=isToday?calcStatus(rows[i],minute):{text:'',cls:''};
- el.textContent=status.text;el.className='p-countdown '+status.cls;
- el.closest('.program-row')?.classList.toggle('a-breve',status.cls==='soon');
+function updateRitualHighlight(rows,isToday,minute){
+ const active=isToday?activeRitual(rows,minute):{index:-1,running:false};
+ $('#program-rows').querySelectorAll('.program-row').forEach((el,i)=>{
+   el.classList.toggle('is-highlighted',i===active.index);
+   el.classList.toggle('is-running',i===active.index&&active.running);
  });
 }
 function renderProgram(force=false){
  const next=getUpcoming()[0];const now=nowRome();let rows=DATA.program.slice().sort((a,b)=>a.time.localeCompare(b.time));
  const key=JSON.stringify([next?.date,now.date,rows]);
- if(!force&&key===lastKey){updateCountdown(rows,next?.date===now.date,now.minute);return}
+ if(!force&&key===lastKey){updateRitualHighlight(rows,next?.date===now.date,now.minute);return}
  lastKey=key;
  $('#event-date').textContent=next?`${formatDate(next.date,{weekday:'long'}).toUpperCase()}\n${formatDate(next.date,{day:'numeric',month:'long',year:'numeric'}).toUpperCase()}`:'PROSSIMO\nEVENTO';
  $('#booking-info').textContent=!next?'CALENDARIO\nIN AGGIORNAMENTO':now.date<bookingFrom(next.date)?`PRENOTAZIONI APERTE\nDAL ${formatDate(bookingFrom(next.date),{day:'numeric',month:'long'}).toUpperCase()}`:'PRENOTAZIONI APERTE\nIN RECEPTION';
  const today=next?.date===now.date;
  if(today){$('#event-tag').textContent='';$('#event-date').textContent='IN PROGRAMMA\nOGGI';}else{$('#event-tag').textContent='';}
- $('#program-rows').innerHTML=rows.length?rows.map((r,i)=>{const st=today?calcStatus(r,now.minute):{text:'',cls:''};const area=String(r.area||'');
- return `<div class="program-row play ${st.cls==='soon'?'a-breve':''}" style="--reveal-delay:${.15+i*.12}s"><span class="p-time">${esc(r.time)}</span><span class="p-icon ${String(r.name).toLowerCase().includes('aufguss')?'hot':''}">${icon(area,r.name)}</span><span class="p-name">${esc(r.name)}</span><span class="p-countdown ${st.cls}">${esc(st.text)}</span><span class="p-last">${esc(area)}</span></div>`}).join(''):'<div class="empty">Programma in aggiornamento</div>';
+ $('#program-rows').innerHTML=rows.length?rows.map((r,i)=>{
+   const area=String(r.area||'');
+   return `<div class="program-row play" style="--reveal-delay:${.15+i*.12}s"><span class="p-time">${esc(r.time)}</span><span class="p-icon ${String(r.name).toLowerCase().includes('aufguss')?'hot':''}">${icon(area,r.name)}</span><span class="p-name">${esc(r.name)}</span><span class="p-last">${esc(area)}</span></div>`;
+ }).join(''):'<div class="empty white">Programma in aggiornamento</div>';
+ updateRitualHighlight(rows,today,now.minute);
 }
 function renderCalendar(){const today=nowRome().date;const events=DATA.events.filter(e=>e.date>today&&localDate(e.date)).slice().sort((a,b)=>a.date.localeCompare(b.date)).slice(0,4);
  $('#calendar-rows').innerHTML=events.length?events.map(e=>{let d=localDate(e.date);return `<div class="calendar-row"><div class="calendar-tile"><div class="calendar-day">${d.getDate()}</div><div class="calendar-month">${esc(formatDate(e.date,{month:'short'}).replace('.','').toUpperCase())}</div></div><div class="calendar-text"><div class="calendar-weekday">${esc(formatDate(e.date,{weekday:'long'}).toUpperCase())}</div><div class="calendar-full">${esc(formatDate(e.date,{day:'numeric',month:'long',year:'numeric'}))}</div></div></div>`}).join(''):'<div class="empty white">Nuove date in aggiornamento</div>';
