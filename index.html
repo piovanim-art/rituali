@@ -449,8 +449,12 @@ function ritualMinutes(row){
  const match=String(row.time).match(/^(\d\d):(\d\d)$/);
  return match?Number(match[1])*60+Number(match[2]):null;
 }
-// Il contorno indica il prossimo appuntamento: cambia un minuto dopo l'orario d'inizio.
-// La pulsazione e' indipendente: parte all'orario d'inizio e dura quanto indicato nel foglio.
+// Il contorno segue sempre l'orologio di Roma, anche quando la data
+// mostrata e' quella di un evento futuro (utile per verificare il programma).
+// Cambia al minuto successivo all'inizio di ogni rituale.
+// Durante il giorno dell'evento il contorno indica il prossimo rituale:
+// resta sull'orario corrente per tutto quel minuto, poi passa al successivo.
+// Dopo l'inizio dell'ultimo rituale non ricomincia dalla prima riga.
 function nextRitualIndex(rows,minute){
  for(let i=0;i<rows.length;i++){
    const start=ritualMinutes(rows[i]);
@@ -459,17 +463,14 @@ function nextRitualIndex(rows,minute){
  return -1;
 }
 let lastKey='',currentSlide=0;
-const previewToday=new URLSearchParams(location.search).has('anteprima');
 function updateRitualHighlight(rows,isToday,minute){
- // Nei giorni precedenti all'evento resta evidenziato il primo rituale;
- // per verificare la dinamica con l'orologio reale: ?anteprima=oggi.
- const live=isToday||previewToday;
- const highlighted=live?nextRitualIndex(rows,minute):(rows.length?0:-1);
+ // Fuori dalla data dell'evento: nessun contorno e nessuna pulsazione.
+ const highlighted=isToday?nextRitualIndex(rows,minute):-1;
  $('#program-rows').querySelectorAll('.program-row').forEach((el,i)=>{
    const start=ritualMinutes(rows[i]);
    const duration=Number(rows[i].duration)||10;
-   const running=live&&start!==null&&minute>=start&&minute<start+duration;
-   el.classList.toggle('is-highlighted',i===highlighted);
+   const running=isToday && start!==null && minute>=start && minute<start+duration;
+   el.classList.toggle('is-highlighted',isToday && i===highlighted);
    el.classList.toggle('is-running',running);
  });
 }
