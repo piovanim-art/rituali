@@ -7,8 +7,22 @@
 <style>
 @font-face{
   font-family:'Gotham';
+  src:url('./Gotham-Book.otf') format('opentype');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'Gotham';
   src:url('./Gotham-Bold.otf') format('opentype');
   font-weight:700;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'Gotham';
+  src:url('./Gotham-Black.otf') format('opentype');
+  font-weight:900;
   font-style:normal;
   font-display:swap;
 }
@@ -189,6 +203,32 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 #slide-calendar .calendar-text{min-width:0;gap:7px}
 #slide-calendar .calendar-weekday{font:700 25px/1 Gotham,Arial,sans-serif;letter-spacing:0}
 #slide-calendar .calendar-full{font:700 36px/1.1 Gotham,Arial,sans-serif;letter-spacing:-.8px;text-transform:uppercase;white-space:nowrap}
+
+/* TIPOGRAFIA GOTHAM — tre pesi ufficiali presenti nella root GitHub.
+   Solo font, senza modifiche a struttura, dimensioni, colori o animazioni. */
+.program-heading,
+#slide-calendar .calendar-title {font-weight:900}
+
+.program-subheading,
+.program-head,
+.p-name,
+.p-countdown,
+.p-countdown.running,
+.p-countdown.finished,
+#booking-info,
+#event-tag,
+#slide-calendar .calendar-intro,
+#slide-calendar .calendar-subtitle {font-weight:700}
+
+#event-date,
+.p-time,
+.p-last,
+#slide-calendar .calendar-description,
+#slide-calendar .calendar-invitation,
+#slide-calendar .calendar-day,
+#slide-calendar .calendar-month,
+#slide-calendar .calendar-weekday,
+#slide-calendar .calendar-full {font-weight:400}
 </style>
 </head>
 <body>
