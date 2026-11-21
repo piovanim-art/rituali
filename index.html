@@ -254,6 +254,25 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
   box-shadow:none !important;
 }
 #slide-program .program-booking{background:transparent !important}
+
+/* SLIDE 2 — un'unica animazione di ingresso per l'intera riga, incluso il contorno.
+   Non animare separatamente i testi: cornice e contenuto entrano nello stesso istante. */
+#slide-program .program-row.play .p-time,
+#slide-program .program-row.play .p-icon,
+#slide-program .program-row.play .p-name,
+#slide-program .program-row.play .p-countdown,
+#slide-program .program-row.play .p-last{animation:none !important}
+#slide-program .program-row.play{
+  animation:ritualRowReveal .36s ease-out both !important;
+  animation-delay:var(--reveal-delay,0s) !important;
+}
+@keyframes ritualRowReveal{
+  from{opacity:0}
+  to{opacity:1}
+}
+@media(prefers-reduced-motion:reduce){
+  #slide-program .program-row.play{animation:none !important;opacity:1 !important}
+}
 </style>
 </head>
 <body>
@@ -462,7 +481,7 @@ function nextRitualIndex(rows,minute){
  }
  return -1;
 }
-let lastKey='',currentSlide=0;
+let lastKey='',currentSlide=0,programEntrancePlayed=false;
 function updateRitualHighlight(rows,isToday,minute){
  // Fuori dalla data dell'evento: nessun contorno e nessuna pulsazione.
  const highlighted=isToday?nextRitualIndex(rows,minute):-1;
@@ -477,17 +496,27 @@ function updateRitualHighlight(rows,isToday,minute){
 function renderProgram(force=false){
  const next=getUpcoming()[0];const now=nowRome();let rows=DATA.program.slice().sort((a,b)=>a.time.localeCompare(b.time));
  const key=JSON.stringify([next?.date,now.date,rows]);
- if(!force&&key===lastKey){updateRitualHighlight(rows,next?.date===now.date,now.minute);return}
+ if(key===lastKey){updateRitualHighlight(rows,next?.date===now.date,now.minute);return}
  lastKey=key;
  $('#event-date').textContent=next?`${formatDate(next.date,{weekday:'long'}).toUpperCase()}\n${formatDate(next.date,{day:'numeric',month:'long',year:'numeric'}).toUpperCase()}`:'PROSSIMO\nEVENTO';
  $('#booking-info').textContent=!next?'CALENDARIO\nIN AGGIORNAMENTO':now.date<bookingFrom(next.date)?`PRENOTAZIONI APERTE\nDAL ${formatDate(bookingFrom(next.date),{day:'numeric',month:'long'}).toUpperCase()}`:'PRENOTAZIONI APERTE\nIN RECEPTION';
  const today=next?.date===now.date;
  if(today){$('#event-tag').textContent='';$('#event-date').textContent='IN PROGRAMMA\nOGGI';}else{$('#event-tag').textContent='';}
+ // Il programma entra in scena una sola volta, al primo caricamento dei dati.
+ // Gli aggiornamenti Google Sheets e la rotazione delle slide non ripetono l'effetto.
+ const playEntrance=rows.length>0 && !programEntrancePlayed;
  $('#program-rows').innerHTML=rows.length?rows.map((r,i)=>{
    const area=String(r.area||'');
-   return `<div class="program-row play" style="--reveal-delay:${.15+i*.12}s"><span class="p-time">${esc(r.time)}</span><span class="p-icon ${String(r.name).toLowerCase().includes('aufguss')?'hot':''}">${icon(area,r.name)}</span><span class="p-name">${esc(r.name)}</span><span class="p-last">${esc(area)}</span></div>`;
+   return `<div class="program-row${playEntrance?' play':''}" style="--reveal-delay:${playEntrance?.15+i*.12:0}s"><span class="p-time">${esc(r.time)}</span><span class="p-icon ${String(r.name).toLowerCase().includes('aufguss')?'hot':''}">${icon(area,r.name)}</span><span class="p-name">${esc(r.name)}</span><span class="p-last">${esc(area)}</span></div>`;
  }).join(''):'<div class="empty white">Programma in aggiornamento</div>';
+ // L'evidenziazione viene impostata PRIMA che parta l'animazione sull'intera riga.
  updateRitualHighlight(rows,today,now.minute);
+ if(playEntrance){
+   programEntrancePlayed=true;
+   // La classe play viene rimossa solo dopo il completamento dell'ingresso.
+   // Il contorno ed il testo restano sulla stessa riga, già disegnati insieme.
+   setTimeout(()=>$('#program-rows').querySelectorAll('.program-row.play').forEach(el=>el.classList.remove('play')),2200);
+ }
 }
 function renderCalendar(){const today=nowRome().date;const events=DATA.events.filter(e=>e.date>today&&localDate(e.date)).slice().sort((a,b)=>a.date.localeCompare(b.date)).slice(0,4);
  $('#calendar-rows').innerHTML=events.length?events.map(e=>{let d=localDate(e.date);return `<div class="calendar-row"><div class="calendar-tile"><div class="calendar-day">${d.getDate()}</div><div class="calendar-month">${esc(formatDate(e.date,{month:'short'}).replace('.','').toUpperCase())}</div></div><div class="calendar-text"><div class="calendar-weekday">${esc(formatDate(e.date,{weekday:'long'}).toUpperCase())}</div><div class="calendar-full">${esc(formatDate(e.date,{day:'numeric',month:'long',year:'numeric'}))}</div></div></div>`}).join(''):'<div class="empty white">Nuove date in aggiornamento</div>';
