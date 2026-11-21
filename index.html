@@ -337,6 +337,61 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
   font:700 27px/1.17 Gotham,Arial,sans-serif;letter-spacing:-.5px;
 }
 
+
+/* === REVISIONE APPROVATA: nessun box né icona per data/prenotazioni === */
+#slide-program .program-subheading{
+  font:700 33px/1.16 Gotham,Arial,sans-serif;
+  letter-spacing:.1px;
+  white-space:nowrap;
+}
+#slide-program .program-date,
+#slide-program .program-booking{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  border-radius:0 !important;
+  padding:0 !important;
+  display:flex;
+  align-items:center;
+  gap:0 !important;
+  text-shadow:0 2px 8px rgba(30,10,4,.22);
+}
+#slide-program .program-date{left:70px;top:515px;width:600px;height:85px}
+#slide-program .program-booking{left:70px;top:705px;width:600px;height:93px}
+#slide-program .program-date .date-stack{width:100%;flex:1;justify-content:center}
+#slide-program #event-date{
+  font:700 40px/1.13 Gotham,Arial,sans-serif !important;
+  letter-spacing:-.9px;
+  white-space:pre-line;
+}
+#slide-program #booking-info{
+  font:700 26px/1.2 Gotham,Arial,sans-serif !important;
+  letter-spacing:-.3px;
+}
+/* Il verticale segue la sequenza: titolo, sottotitolo, data, rituali, prenotazioni. */
+#stage.portrait #slide-program .program-subheading{
+  margin-top:30px;
+  font:700 35px/1.16 Gotham,Arial,sans-serif;
+  white-space:normal;
+}
+#stage.portrait #slide-program .program-date{
+  left:66px;top:415px;width:950px;height:83px;
+}
+#stage.portrait #slide-program #event-date{
+  font:700 47px/1.12 Gotham,Arial,sans-serif !important;
+  letter-spacing:-.7px;
+}
+#stage.portrait #slide-program .program-table{
+  left:43px;top:545px;width:994px;height:1100px;
+}
+#stage.portrait #slide-program .program-booking{
+  left:66px;top:1710px;width:950px;height:100px;
+}
+#stage.portrait #slide-program #booking-info{
+  font:700 37px/1.18 Gotham,Arial,sans-serif !important;
+  letter-spacing:-.4px;
+}
+
 </style>
 </head>
 <body>
@@ -351,16 +406,16 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
   <section class="slide" id="slide-program">
     <div class="program-left">
       <div class="program-heading">RITUALI<br>BENESSERE</div>
-      <div class="program-subheading">UN VIAGGIO TRA VAPORE<br>E AROMI ESSENZIALI<br>CHE RIGENERANO I SENSI.</div>
+      <div class="program-subheading">SCOPRI L’ESPERIENZA AUFGUSS</div>
       <div class="program-line"></div>
     </div>
     <div class="program-separator"></div>
     <div class="program-date">
-      <svg viewBox="0 0 80 80" aria-hidden="true"><rect x="12" y="17" width="56" height="53" rx="7"/><path d="M12 33h56M27 7v20M53 7v20"/></svg>
+      
       <div class="date-stack"><span id="event-tag" aria-live="polite"></span><span id="event-date">PROSSIMO EVENTO</span></div>
     </div>
     <div class="program-booking">
-      <svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="20" r="12"/><path d="M13 69V55c0-13 12-21 27-21s27 8 27 21v14z"/></svg>
+      
       <span id="booking-info">PRENOTAZIONI APERTE IN RECEPTION</span>
     </div>
 
@@ -565,7 +620,7 @@ function renderProgram(force=false){
  const key=JSON.stringify([next?.date,now.date,rows]);
  if(key===lastKey){updateRitualHighlight(rows,next?.date===now.date,now.minute);return}
  lastKey=key;
- $('#event-date').textContent=next?`${formatDate(next.date,{weekday:'long'}).toUpperCase()}\n${formatDate(next.date,{day:'numeric',month:'long',year:'numeric'}).toUpperCase()}`:'PROSSIMO\nEVENTO';
+ $('#event-date').textContent=next?`${formatDate(next.date,{weekday:'long'}).toUpperCase()} ${formatDate(next.date,{day:'numeric',month:'long'}).toUpperCase()}`:'PROSSIMO\nEVENTO';
  $('#booking-info').textContent=!next?'CALENDARIO\nIN AGGIORNAMENTO':now.date<bookingFrom(next.date)?`PRENOTAZIONI APERTE\nDAL ${formatDate(bookingFrom(next.date),{day:'numeric',month:'long'}).toUpperCase()}`:'PRENOTAZIONI APERTE\nIN RECEPTION';
  const today=next?.date===now.date;
  if(today){$('#event-tag').textContent='';$('#event-date').textContent='IN PROGRAMMA\nOGGI';}else{$('#event-tag').textContent='';}
