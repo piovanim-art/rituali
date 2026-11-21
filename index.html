@@ -530,7 +530,25 @@ function localDate(s){const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(String(s||''));if(!
 function iso(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function formatDate(s,opts){const d=localDate(s);return d?d.toLocaleDateString('it-IT',opts):''}
 function nowRome(){const p=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Rome',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());const v=x=>p.find(e=>e.type===x)?.value;return{date:`${v('year')}-${v('month')}-${v('day')}`,minute:+v('hour')*60+(+v('minute'))}}
-function getUpcoming(){const today=nowRome().date;return DATA.events.filter(e=>e.date>=today&&localDate(e.date)).slice().sort((a,b)=>a.date.localeCompare(b.date))}
+// Al termine effettivo dell'ultimo rituale il giorno dell'evento passa subito
+// alla prossima data disponibile, senza attendere la mezzanotte.
+// La durata e' letta dalla colonna D di Google Sheets.
+function lastRitualEndMinute(rows){
+ const ends=rows.map(row=>{
+   const start=ritualMinutes(row);
+   return start===null?null:start+(Number(row.duration)>0?Number(row.duration):10);
+ }).filter(end=>end!==null);
+ return ends.length?Math.max(...ends):null;
+}
+function getUpcoming(){
+ const now=nowRome();
+ const lastEnd=lastRitualEndMinute(DATA.program);
+ return DATA.events.filter(e=>{
+   if(!localDate(e.date) || e.date<now.date)return false;
+   if(e.date===now.date && lastEnd!==null && now.minute>=lastEnd)return false;
+   return true;
+ }).slice().sort((a,b)=>a.date.localeCompare(b.date));
+}
 function asTime(raw,formatted){let t=String(formatted||raw||'').trim();const m=t.match(/^(\d{1,2}):(\d\d)/);if(m)return `${m[1].padStart(2,'0')}:${m[2]}`;if(typeof raw==='number'&&raw>=0&&raw<1){let n=Math.round(raw*1440);return `${String(Math.floor(n/60)%24).padStart(2,'0')}:${String(n%60).padStart(2,'0')}`}if(/^Date\(/.test(t)){let a=t.match(/Date\([^,]+,[^,]+,[^,]+,(\d+),(\d+)/);if(a)return `${a[1].padStart(2,'0')}:${a[2].padStart(2,'0')}`}return ''}
 function asDate(raw,formatted){
  // Supporta le date Google Sheets sia come Date(anno,mese,giorno), sia come
