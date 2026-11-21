@@ -5,27 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rituali Benessere | VTV</title>
 <style>
-@font-face{
-  font-family:'Gotham';
-  src:url('./Gotham-Book.otf') format('opentype');
-  font-weight:400;
-  font-style:normal;
-  font-display:swap;
-}
-@font-face{
-  font-family:'Gotham';
-  src:url('./Gotham-Bold.otf') format('opentype');
-  font-weight:700;
-  font-style:normal;
-  font-display:swap;
-}
-@font-face{
-  font-family:'Gotham';
-  src:url('./Gotham-Black.otf') format('opentype');
-  font-weight:900;
-  font-style:normal;
-  font-display:swap;
-}
+@font-face{font-family:'Gotham';src:url('./Gotham-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Gotham';src:url('./Gotham-Bold.otf') format('opentype');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Gotham';src:url('./Gotham-Black.otf') format('opentype');font-weight:900;font-style:normal;font-display:swap}
 :root{
   --red:#c60024;
   --red-dark:#ab001f;
@@ -204,31 +186,10 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 #slide-calendar .calendar-weekday{font:700 25px/1 Gotham,Arial,sans-serif;letter-spacing:0}
 #slide-calendar .calendar-full{font:700 36px/1.1 Gotham,Arial,sans-serif;letter-spacing:-.8px;text-transform:uppercase;white-space:nowrap}
 
-/* TIPOGRAFIA GOTHAM — tre pesi ufficiali presenti nella root GitHub.
-   Solo font, senza modifiche a struttura, dimensioni, colori o animazioni. */
-.program-heading,
-#slide-calendar .calendar-title {font-weight:900}
-
-.program-subheading,
-.program-head,
-.p-name,
-.p-countdown,
-.p-countdown.running,
-.p-countdown.finished,
-#booking-info,
-#event-tag,
-#slide-calendar .calendar-intro,
-#slide-calendar .calendar-subtitle {font-weight:700}
-
-#event-date,
-.p-time,
-.p-last,
-#slide-calendar .calendar-description,
-#slide-calendar .calendar-invitation,
-#slide-calendar .calendar-day,
-#slide-calendar .calendar-month,
-#slide-calendar .calendar-weekday,
-#slide-calendar .calendar-full {font-weight:400}
+/* Gerarchia Gotham: lascia invariati posizione, dimensioni e colori. */
+.program-heading,#slide-calendar .calendar-title{font-weight:900}
+.program-subheading,.program-head,.p-name,.p-countdown,#booking-info,#event-tag,#slide-calendar .calendar-intro,#slide-calendar .calendar-subtitle{font-weight:700}
+#event-date,.p-time,.p-last,#slide-calendar .calendar-description,#slide-calendar .calendar-invitation,#slide-calendar .calendar-day,#slide-calendar .calendar-month,#slide-calendar .calendar-weekday,#slide-calendar .calendar-full{font-weight:400}
 </style>
 </head>
 <body>
@@ -285,16 +246,16 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
 // Il documento deve consentire la lettura pubblica o essere pubblicato sul web.
 // Il Foglio1 delle News non viene letto né modificato.
 const CONFIG={sheetId:'1scvqeVh8AE5XT-RN7b3vnmB6aiioYqNAXcPiBWTydVU',sheetGid:'519917730',sheetName:'Rituali',refreshMs:60000,slideTimes:[10000,15000,10000]};
-const params=new URLSearchParams(location.search);
-const demo=params.has('demo');
-const debug=params.has('debug');
-function reportSheetStatus(message,failed=false){
-  console[failed?'error':'info']('[Rituali / Google Sheets] '+message);
+const queryParams=new URLSearchParams(location.search);
+const demo=queryParams.has('demo');
+const debug=queryParams.has('debug');
+function sheetMessage(message,error=false){
+  console[error?'error':'info']('[Rituali Google Sheets] '+message);
   if(!debug)return;
-  let box=document.getElementById('sheet-debug');
-  if(!box){box=document.createElement('aside');box.id='sheet-debug';box.style.cssText='position:fixed;z-index:99999;right:12px;bottom:12px;max-width:min(740px,95vw);padding:14px 18px;background:rgba(0,0,0,.90);color:white;border:2px solid #fff;border-radius:10px;font:16px/1.4 Arial,sans-serif;white-space:pre-wrap;box-shadow:0 4px 20px #0008';document.body.appendChild(box)}
-  box.textContent='GOOGLE SHEETS — '+(failed?'ERRORE':'STATO')+'\n'+message;
-  box.style.borderColor=failed?'#ff4969':'#73dd96';
+  let status=document.getElementById('sheet-debug');
+  if(!status){status=document.createElement('div');status.id='sheet-debug';status.style.cssText='position:fixed;bottom:12px;right:12px;z-index:10000;max-width:90vw;background:#181818;color:#fff;padding:12px 16px;font:16px Arial,sans-serif;border:2px solid #fff;border-radius:8px;white-space:pre-wrap';document.body.appendChild(status)}
+  status.textContent='Google Sheets: '+message;
+  status.style.borderColor=error?'#ff4e66':'#7ad9a1';
 }
 const standardDemo=[
 ['10:30','Scrub viso e corpo Frutti Rossi','Bagno Turco',10],
@@ -346,8 +307,8 @@ async function readGoogleSheet(){
    const tag=document.createElement('script');let timer;
    const clean=()=>{clearTimeout(timer);tag.remove();delete window[callback]};
    window[callback]=res=>{try{
-     if(res?.status==='error')throw Error('Risposta Google: '+(res.errors||[]).map(e=>e.detailed_message||e.message||e.reason).join('; '));
-      if(!res?.table?.rows)throw Error('Google Sheet non disponibile, non pubblico oppure intervallo vuoto');
+     if(res?.status==='error')throw Error('Risposta Google: '+(res.errors||[]).map(e=>e.detailed_message||e.message||e.reason).join(' / '));
+      if(!res?.table?.rows)throw Error('Google Sheet non disponibile o non pubblicato');
      let program=[],events=[];
      for(const row of res.table.rows){
        const cs=row.c||[];
@@ -363,7 +324,7 @@ async function readGoogleSheet(){
      }
      if(!program.length&&!events.length)throw Error('Nessun dato valido nella scheda Rituali');
      DATA={program:program.length?program:DATA.program,events:[...new Map(events.map(x=>[x.date,x])).values()]};
-     clean();resolve();
+     sheetMessage('collegato — '+program.length+' rituali, '+events.length+' date evento');clean();resolve();
    }catch(err){clean();reject(err)}};
    tag.onerror=()=>{clean();reject(Error('Impossibile leggere Google Sheets'))};
    timer=setTimeout(()=>{clean();reject(Error('Timeout Google Sheets'))},12000);
@@ -419,7 +380,7 @@ const slides=['#slide-marketing','#slide-program','#slide-calendar'].map(s=>$(s)
 function show(i){currentSlide=i;slides.forEach((s,j)=>s.classList.toggle('active',j===i));if(i===1)renderProgram(true);if(i===2)renderCalendar()}
 function resize(){document.documentElement.style.setProperty('--scale',Math.max(innerWidth/1920,innerHeight/1080))}addEventListener('resize',resize);resize();
 if(demo){const d=localDate(nowRome().date);d.setDate(d.getDate()+7);DATA.events=[0,21,42,63,84].map(x=>{let dd=new Date(d);dd.setDate(dd.getDate()+x);return {date:iso(dd)}})}
-async function updateData(){if(demo){reportSheetStatus('Modalità DEMO attiva: il foglio Google non viene letto. Rimuovi ?demo dall’indirizzo.');return;}try{await readGoogleSheet();if(currentSlide===1)renderProgram(true);if(currentSlide===2)renderCalendar()}catch(err){reportSheetStatus(err.message+'. Verifica che il file Google Sheets sia accessibile a chiunque abbia il link e che il gid della scheda Rituali sia corretto.',true)}}
+async function updateData(){if(demo){sheetMessage('modalità DEMO: rimuovere ?demo per leggere Google Sheets',true);return;}try{await readGoogleSheet();if(currentSlide===1)renderProgram(true);if(currentSlide===2)renderCalendar()}catch(err){sheetMessage(err.message,true)}}
 updateData();show(0);
 let lastSwitch=Date.now();setInterval(()=>{let time=Date.now();if(time-lastSwitch>=CONFIG.slideTimes[currentSlide]){lastSwitch=time;show((currentSlide+1)%3)}else if(currentSlide===1)renderProgram()},1000);
 setInterval(updateData,CONFIG.refreshMs);
