@@ -585,6 +585,33 @@ html, body { width:100%; height:100%; margin:0; overflow:hidden; }
 /* La scritta nuova non viene mostrata nel layout verticale, che resta identico. */
 #stage.portrait #slide-program .marketing-slogan{display:none !important}
 
+
+/* 22/11 — ottimizzazione finale leggibilita' da 4 metri, SOLO 16:9.
+   Titoli, data, prenotazioni e layout verticale restano invariati. */
+#stage:not(.portrait) #slide-program .program-subheading{
+  font-size:32px !important; /* +10% rispetto ai 29 px precedenti */
+  line-height:1.22 !important;
+  max-width:665px !important;
+  text-wrap:pretty;
+}
+#stage:not(.portrait) #slide-program .program-table{
+  left:758px !important; /* tabella 24 px piu' a sinistra */
+  width:1132px !important; /* bordo destro invariato */
+}
+#stage:not(.portrait) #slide-program .program-row{
+  grid-template-columns:121px 69px minmax(0,1fr) 218px !important;
+}
+#stage:not(.portrait) #slide-program .p-time{
+  font-size:44px !important;
+}
+#stage:not(.portrait) #slide-program .p-name{
+  font-size:41.5px !important;
+}
+#stage:not(.portrait) #slide-program .p-last{
+  font-size:39.5px !important;
+  width:218px !important;
+}
+
 </style>
 </head>
 <body>
