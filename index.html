@@ -631,6 +631,23 @@ html, body { width:100%; height:100%; margin:0; overflow:hidden; }
 #slide-program .program-row.is-running .p-name,
 #slide-program .program-row.is-running .p-icon svg{animation:none !important;transform:none !important;opacity:1 !important}
 
+
+/* 22/11 — Solo 16:9: rituali conclusi ancora leggibili, attenuati al 60%.
+   Il cambio e' unico e morbido (1 secondo), senza pulsazioni o loop.
+   I rituali futuri e quello evidenziato restano al 100%. */
+#stage:not(.portrait) #slide-program .program-row{
+  transition:opacity 1s ease !important;
+}
+#stage:not(.portrait) #slide-program .program-row.is-finished{
+  opacity:.60 !important;
+}
+#stage:not(.portrait) #slide-program .program-row.is-highlighted{
+  opacity:1 !important;
+}
+@media(prefers-reduced-motion:reduce){
+  #stage:not(.portrait) #slide-program .program-row{transition:none !important}
+}
+
 </style>
 </head>
 <body>
