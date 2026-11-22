@@ -457,6 +457,17 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f0b03;fon
   white-space:nowrap !important;
   text-align:left !important;
 }
+
+/* OPTISIGNS: coordinate in pixel logici e ridimensionamento uniforme.
+   Il rettangolo disegnato e' sempre contenuto nel viewport: nessun overflow. */
+html, body { width:100%; height:100%; margin:0; overflow:hidden; }
+#stage {
+  position:absolute !important;
+  left:0 !important;
+  top:0 !important;
+  transform-origin:0 0 !important;
+  transform:translate3d(var(--fit-left,0px),var(--fit-top,0px),0) scale(var(--fit-scale,1)) !important;
+}
 </style>
 </head>
 <body>
@@ -729,24 +740,31 @@ function renderCalendar(){const today=nowRome().date;const events=DATA.events.fi
 const slides=['#slide-marketing','#slide-program'].map(s=>$(s));
 function show(i){currentSlide=i;slides.forEach((s,j)=>s.classList.toggle('active',j===i));if(i===1)renderProgram(true)}
 function resize(){
- // L'orientamento puo' essere forzato per i player OptiSigns che
- // restituiscono dimensioni della finestra diverse da quelle del monitor.
+ // Orientamento e dimensioni: usa il viewport del player (non i pollici
+ // fisici del televisore e non la risoluzione nominale del pannello).
  const params=new URLSearchParams(location.search);
  const requested=(params.get('formato')||params.get('orientamento')||'').toLowerCase();
+ const vw=Math.max(1, document.documentElement.clientWidth || window.innerWidth);
+ const vh=Math.max(1, document.documentElement.clientHeight || window.innerHeight);
  const portrait=requested==='verticale'||requested==='9:16'||requested==='portrait'
    ? true
    : requested==='orizzontale'||requested==='16:9'||requested==='landscape'
      ? false
-     : innerHeight>innerWidth;
+     : vh>vw;
  const stage=$('#stage');
  stage.classList.toggle('portrait',portrait);
- const baseW=portrait?1080:1920,baseH=portrait?1920:1080;
- // CONTAIN invece di COVER: garantisce che nessun testo venga tagliato.
- // Math.max ingrandiva e ritagliava la parte destra/bassa su alcuni player.
- const scale=Math.min(innerWidth/baseW,innerHeight/baseH);
- document.documentElement.style.setProperty('--scale',scale);
- // Anche la copertina deve seguire l'orientamento scelto, non quello
- // eventualmente errato rilevato dal browser del player.
+ const baseW=portrait?1080:1920;
+ const baseH=portrait?1920:1080;
+ // 'contain' anziche 'cover': NON taglia i lati ne' la parte inferiore.
+ const scale=Math.min(vw/baseW,vh/baseH);
+ const renderedW=baseW*scale;
+ const renderedH=baseH*scale;
+ const offsetX=(vw-renderedW)/2;
+ const offsetY=(vh-renderedH)/2;
+ document.documentElement.style.setProperty('--fit-scale',String(scale));
+ document.documentElement.style.setProperty('--fit-left',`${offsetX}px`);
+ document.documentElement.style.setProperty('--fit-top',`${offsetY}px`);
+ // Foto appropriata per l'orientamento, senza ritagli o deformazioni.
  const cover=$('#slide-marketing .full-image');
  const source=$('#slide-marketing picture source');
  if(source)source.media='(min-width: 99999px)';
@@ -755,7 +773,9 @@ function resize(){
    if(cover.getAttribute('src')!==path)cover.setAttribute('src',path);
  }
 }
-addEventListener('resize',resize);resize();
+addEventListener('resize',resize);
+if(window.visualViewport) window.visualViewport.addEventListener('resize',resize);
+resize();
 if(demo){const d=localDate(nowRome().date);d.setDate(d.getDate()+7);DATA.events=[0,21,42,63,84].map(x=>{let dd=new Date(d);dd.setDate(dd.getDate()+x);return {date:iso(dd)}})}
 let loadingSheet=false;
  async function updateData(){if(demo||loadingSheet)return;loadingSheet=true;try{await readGoogleSheet();if(currentSlide===1)renderProgram(true);if(currentSlide===2)renderCalendar()}catch(err){console.warn(err.message)}finally{loadingSheet=false}}
