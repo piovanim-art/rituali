@@ -468,6 +468,50 @@ html, body { width:100%; height:100%; margin:0; overflow:hidden; }
   transform-origin:0 0 !important;
   transform:translate3d(var(--fit-left,0px),var(--fit-top,0px),0) scale(var(--fit-scale,1)) !important;
 }
+
+/* 22/11 — maggiore leggibilità a distanza sul SOLO layout orizzontale.
+   Manteniamo le dieci righe, la struttura e il fit proporzionale di OptiSigns. */
+#stage:not(.portrait) #slide-program .program-table{
+  top:116px;
+  height:720px;
+}
+#stage:not(.portrait) #slide-program .program-row{
+  /* Il contenuto del rituale sfrutta lo spazio libero prima della location. */
+  grid-template-columns:125px 82px minmax(0,1fr) 192px !important;
+  padding-left:17px !important;
+  padding-right:17px !important;
+}
+#stage:not(.portrait) #slide-program .p-time{
+  font:700 38px/1.1 Gotham,Arial,sans-serif !important;
+}
+#stage:not(.portrait) #slide-program .p-name{
+  font:700 33px/1.08 Gotham,Arial,sans-serif !important;
+  letter-spacing:-.65px !important;
+  white-space:nowrap;
+  transform-origin:left center;
+}
+#stage:not(.portrait) #slide-program .p-icon svg{
+  width:49px !important;
+  height:49px !important;
+}
+#stage:not(.portrait) #slide-program .p-last{
+  width:192px !important;
+  font:400 30px/1.1 Gotham,Arial,sans-serif !important;
+  white-space:nowrap;
+}
+/* Durante l'effettiva durata del rituale pulsano INSIEME icona e nome.
+   Orario e location restano sempre fermi e leggibili. */
+@keyframes ritualNameBreath{
+  0%,100%{transform:scale(1);opacity:1}
+  50%{transform:scale(1.035);opacity:.90}
+}
+#slide-program .program-row.is-running .p-name{
+  animation:ritualNameBreath 2.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion:reduce){
+  #slide-program .program-row.is-running .p-name{animation:none}
+}
+
 </style>
 </head>
 <body>
