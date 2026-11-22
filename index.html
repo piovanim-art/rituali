@@ -729,11 +729,31 @@ function renderCalendar(){const today=nowRome().date;const events=DATA.events.fi
 const slides=['#slide-marketing','#slide-program'].map(s=>$(s));
 function show(i){currentSlide=i;slides.forEach((s,j)=>s.classList.toggle('active',j===i));if(i===1)renderProgram(true)}
 function resize(){
- const portrait=innerHeight>innerWidth;
+ // L'orientamento puo' essere forzato per i player OptiSigns che
+ // restituiscono dimensioni della finestra diverse da quelle del monitor.
+ const params=new URLSearchParams(location.search);
+ const requested=(params.get('formato')||params.get('orientamento')||'').toLowerCase();
+ const portrait=requested==='verticale'||requested==='9:16'||requested==='portrait'
+   ? true
+   : requested==='orizzontale'||requested==='16:9'||requested==='landscape'
+     ? false
+     : innerHeight>innerWidth;
  const stage=$('#stage');
  stage.classList.toggle('portrait',portrait);
  const baseW=portrait?1080:1920,baseH=portrait?1920:1080;
- document.documentElement.style.setProperty('--scale',Math.max(innerWidth/baseW,innerHeight/baseH));
+ // CONTAIN invece di COVER: garantisce che nessun testo venga tagliato.
+ // Math.max ingrandiva e ritagliava la parte destra/bassa su alcuni player.
+ const scale=Math.min(innerWidth/baseW,innerHeight/baseH);
+ document.documentElement.style.setProperty('--scale',scale);
+ // Anche la copertina deve seguire l'orientamento scelto, non quello
+ // eventualmente errato rilevato dal browser del player.
+ const cover=$('#slide-marketing .full-image');
+ const source=$('#slide-marketing picture source');
+ if(source)source.media='(min-width: 99999px)';
+ if(cover){
+   const path=portrait?'./cartello-verticale.jpg':'./cartello-orizzontale.jpg';
+   if(cover.getAttribute('src')!==path)cover.setAttribute('src',path);
+ }
 }
 addEventListener('resize',resize);resize();
 if(demo){const d=localDate(nowRome().date);d.setDate(d.getDate()+7);DATA.events=[0,21,42,63,84].map(x=>{let dd=new Date(d);dd.setDate(dd.getDate()+x);return {date:iso(dd)}})}
