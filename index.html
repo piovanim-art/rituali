@@ -512,6 +512,76 @@ html, body { width:100%; height:100%; margin:0; overflow:hidden; }
   #slide-program .program-row.is-running .p-name{animation:none}
 }
 
+
+/* REVISIONE 22/11 — SOLO 16:9. Campagna marketing completa + massima leggibilità. */
+#stage:not(.portrait) #slide-program .program-left{
+  left:72px;top:92px;width:665px;
+}
+#stage:not(.portrait) #slide-program .marketing-slogan{
+  font:900 55px/.96 Gotham,Arial,sans-serif;
+  letter-spacing:-2.15px;
+  margin:0 0 29px;
+  color:#fff;
+}
+#stage:not(.portrait) #slide-program .program-heading{
+  font:900 46px/.94 Gotham,Arial,sans-serif !important;
+  letter-spacing:-1.25px !important;
+}
+#stage:not(.portrait) #slide-program .program-subheading{
+  font:400 29px/1.21 Gotham,Arial,sans-serif !important;
+  max-width:650px;
+  margin-top:23px !important;
+}
+#stage:not(.portrait) #slide-program .program-separator{
+  left:756px;top:89px;height:806px;
+}
+#stage:not(.portrait) #slide-program .program-date{
+  left:72px;top:674px;width:655px;height:102px;
+}
+#stage:not(.portrait) #slide-program #event-date{
+  font:700 51px/1.05 Gotham,Arial,sans-serif !important;
+}
+#stage:not(.portrait) #slide-program .program-booking{
+  left:72px;top:802px;width:650px;height:87px;
+  align-items:center;
+}
+#stage:not(.portrait) #slide-program #booking-info{
+  font:400 32px/1.18 Gotham,Arial,sans-serif !important;
+  letter-spacing:-.35px;
+}
+#stage:not(.portrait) #slide-program .program-table{
+  left:782px;top:96px;width:1108px;height:795px;
+}
+#stage:not(.portrait) #slide-program .program-row{
+  grid-template-columns:126px 70px minmax(0,1fr) 210px !important;
+  padding-left:10px !important;
+  padding-right:10px !important;
+  border-radius:14px;
+}
+#stage:not(.portrait) #slide-program .p-time{
+  font:700 40px/1.05 Gotham,Arial,sans-serif !important;
+}
+#stage:not(.portrait) #slide-program .p-icon svg{
+  width:52px !important;height:52px !important;
+}
+#stage:not(.portrait) #slide-program .p-name{
+  font:700 38px/1.07 Gotham,Arial,sans-serif !important;
+  letter-spacing:-.9px !important;
+  padding-right:7px;
+  white-space:nowrap;
+}
+#stage:not(.portrait) #slide-program .p-last{
+  width:210px !important;
+  font:400 33px/1.08 Gotham,Arial,sans-serif !important;
+  white-space:nowrap;
+}
+/* Bordo interno: nessun aumento di altezza e nessuna interferenza con le righe. */
+#stage:not(.portrait) #slide-program .program-row.is-highlighted{
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.96);
+}
+/* La scritta nuova non viene mostrata nel layout verticale, che resta identico. */
+#stage.portrait #slide-program .marketing-slogan{display:none !important}
+
 </style>
 </head>
 <body>
@@ -525,6 +595,7 @@ html, body { width:100%; height:100%; margin:0; overflow:hidden; }
 
   <section class="slide" id="slide-program">
     <div class="program-left">
+      <div class="marketing-slogan">ALZA LA TEMPERATURA.<br>ABBASSA LO<br>STRESS.</div>
       <div class="program-heading">UN RITUALE DI<br>RIGENERAZIONE<br>PROFONDA</div>
       <div class="program-subheading">Scopri l’esperienza Aufguss, un viaggio tra vapore e aromi essenziali che rigenerano i sensi.</div>
     </div>
@@ -535,7 +606,8 @@ html, body { width:100%; height:100%; margin:0; overflow:hidden; }
     </div>
     <div class="program-booking">
       
-      <span id="booking-info">PRENOTAZIONI APERTE IN RECEPTION</span>
+      <span id="booking-info">Prenotazioni in reception
+aperte.</span>
     </div>
 
     <div class="program-table">
@@ -758,7 +830,7 @@ function renderProgram(force=false){
  if(key===lastKey){updateRitualHighlight(rows,next?.date===now.date,now.minute);return}
  lastKey=key;
  $('#event-date').textContent=next?`${formatDate(next.date,{weekday:'long'}).toUpperCase()}\n${formatDate(next.date,{day:'numeric',month:'long'}).toUpperCase()}`:'PROSSIMO\nEVENTO';
- $('#booking-info').textContent=!next?'CALENDARIO\nIN AGGIORNAMENTO':now.date<bookingFrom(next.date)?`PRENOTAZIONI APERTE\nDAL ${formatDate(bookingFrom(next.date),{day:'numeric',month:'long'}).toUpperCase()}`:'PRENOTAZIONI APERTE\nIN RECEPTION';
+ $('#booking-info').textContent=!next?'Calendario\nin aggiornamento.':now.date<bookingFrom(next.date)?`Prenotazioni in reception\ndal ${formatDate(bookingFrom(next.date),{day:'numeric',month:'long'})}.`:'Prenotazioni in reception\naperte.';
  const today=next?.date===now.date;
  if(today){$('#event-tag').textContent='';$('#event-date').textContent='IN PROGRAMMA\nOGGI';}else{$('#event-tag').textContent='';}
  // Il programma entra in scena una sola volta, al primo caricamento dei dati.
